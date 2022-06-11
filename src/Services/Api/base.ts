@@ -1,7 +1,11 @@
 import axios, { CancelToken } from 'axios';
+import { clearToken, getToken } from 'Services/Storage';
 import { parseObjectToCamelCase } from 'utils';
 
-const API_URL = process.env.NODE_ENV === 'development' ? 'http://18.141.202.3' : '';
+const API_URL =
+  process.env.NODE_ENV === 'development' ? 'http://18.141.202.3' : 'http://18.141.202.3';
+
+export const API_BASE_URL_PATH = '/ntux-server/api/v1';
 
 export interface ApiResponse {
   errorCode: number;
@@ -29,7 +33,7 @@ export default class BaseService {
     return args.join('');
   };
 
-  parseData = (data: ApiRequestData, config: any = {}) => {
+  parseData = async (data: ApiRequestData, config: any = {}) => {
     config = config || {};
 
     const headersPayload = config?.headers || { headers: {} };
@@ -40,8 +44,10 @@ export default class BaseService {
       delete headersPayload['Content-Type'];
     }
 
+    const token = await getToken();
+
     config.headers = {};
-    // config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`; //FIXME: get JWT token here
+    config.headers.Authorization = `Bearer ${token}`;
 
     switch (headersPayload['Content-Type']) {
       case 'application/json':
@@ -49,7 +55,7 @@ export default class BaseService {
       case 'multipart/form-data':
       default: {
         if (data instanceof FormData) {
-          const fd: any = new FormData();
+          const fd = new FormData();
           // for (const key of data.keys()) { //FIXME: copy formdata data here
           //   fd.append(key, data.get(key));
           // }
@@ -63,12 +69,12 @@ export default class BaseService {
 
   getRequest = async (url: string) => {
     try {
-      const parsedData = this.parseData({}, {});
+      const parsedData = await this.parseData({}, {});
       const finalUrl = this.joinURL(API_URL, this._baseUrl, url);
       const response: ApiResponse = await axios.get(finalUrl, parsedData.config);
       if (response.errorCode === 401 || response.status === 401) {
         // unauthorized
-        // localStorage.clear(); //FIXME: clear JWT token here
+        await clearToken();
       }
       return parseObjectToCamelCase(response);
     } catch (err: any) {
@@ -83,12 +89,12 @@ export default class BaseService {
 
   postRequest = async (url: string, data: ApiRequestData, config: any = {}) => {
     try {
-      const parsedData = this.parseData(data, config);
+      const parsedData = await this.parseData(data, config);
       const finalUrl = this.joinURL(API_URL, this._baseUrl, url);
 
       const response = await axios.post(finalUrl, parsedData.data, parsedData.config);
 
-      return response;
+      return parseObjectToCamelCase(response);
     } catch (err: any) {
       return {
         data: {
@@ -101,7 +107,7 @@ export default class BaseService {
 
   patchRequest = async (url: string, data: ApiRequestData, config: any = {}) => {
     try {
-      const parsedData = this.parseData(data, config);
+      const parsedData = await this.parseData(data, config);
       const finalUrl = this.joinURL(API_URL, this._baseUrl, url);
 
       const response: ApiResponse = await axios.patch(finalUrl, parsedData.data, parsedData.config);
@@ -118,7 +124,7 @@ export default class BaseService {
 
   deleteRequest = async (url: string, data: ApiRequestData, config: any = {}) => {
     try {
-      const parsedData = this.parseData(data, config);
+      const parsedData = await this.parseData(data, config);
       const finalUrl = this.joinURL(API_URL, this._baseUrl, url);
 
       const response: ApiResponse = await axios.delete(finalUrl, parsedData.config);

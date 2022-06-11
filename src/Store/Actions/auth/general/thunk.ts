@@ -1,18 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import axios from 'axios';
-import AuthService from '../../../Services/auth/general';
+/**
+ * LEGACY CODE, calling API by triggering an action
+ * It is suggested to use react query instead
+ */
 import { AppDispatch, RootState } from '../../../Store';
 import { loadRequest, loadSuccess, loadFailed, reset as resetAuthGeneralState } from './general';
 import { selectUser, selectUserId } from 'Store/Selector/auth';
-
-const { CancelToken } = axios;
-const source = CancelToken.source();
-const canceler = source.cancel;
-
-const service = new AuthService({
-  baseUrl: '/ntux-server/api/v1',
-  cancelToken: source.token,
-});
+import { canceler, authService as service } from '@/Services/Api/auth/general';
 
 const sendErrorNotification = (errorMessage = '', errorCode = 1) => {
   if (errorCode === 0 || errorCode === 401) {

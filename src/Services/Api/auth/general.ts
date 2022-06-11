@@ -1,8 +1,9 @@
-// import { ConfirmEmailRequest, Id, LoginRequest, User } from './../../../Models/Auth';
-import BaseService from '../base';
+import axios from 'axios';
+import { Id, User } from '../../../model';
+import BaseService, { API_BASE_URL_PATH } from '../base';
 
 export default class AuthService extends BaseService {
-  signup = async (user: any) => {
+  signup = async (user: User) => {
     const res = await this.postRequest('/auth/signup', user);
     return res.data;
   };
@@ -17,7 +18,7 @@ export default class AuthService extends BaseService {
     return res.data;
   };
 
-  getAccount = async (userId: any) => {
+  getAccount = async (userId: Id) => {
     const res = await this.getRequest(`/user/${userId}`);
     return res.data;
   };
@@ -58,7 +59,7 @@ export default class AuthService extends BaseService {
     return res.data;
   };
 
-  updateAccount = async (data: any, userId: string) => {
+  updateAccount = async (data: any, userId: Id) => {
     const res = await this.patchRequest(`/user/${userId}`, data);
     return res.data;
   };
@@ -70,3 +71,15 @@ export default class AuthService extends BaseService {
     };
   };
 }
+
+//common instance of service
+const { CancelToken } = axios;
+const source = CancelToken.source();
+const canceler = source.cancel;
+
+const authService = new AuthService({
+  baseUrl: API_BASE_URL_PATH,
+  cancelToken: source.token,
+});
+
+export { authService, canceler };

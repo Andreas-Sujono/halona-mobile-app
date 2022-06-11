@@ -17,6 +17,9 @@ export const loadRequest = (data: any) => commonLoadRequest(ActionTypes, data);
 export const loadSuccess = (data: any) => commonLoadSuccess(ActionTypes, data);
 export const loadFailed = () => commonLoadFailed(ActionTypes);
 
+export const setIsAuthenticated = (isAuthenticated: boolean) =>
+  set('isAuthenticated', isAuthenticated);
+
 export const reset = () => ({
   type: ActionTypes.RESET,
   payload: {},

@@ -13,6 +13,8 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import auth from './Reducers/auth';
 
+//we use redux store to store offline data, to fetch api, we use react query instead
+
 // const isDevelopment = process.env.NODE_ENV === 'development';
 const additionMiddlewares = [thunk];
 

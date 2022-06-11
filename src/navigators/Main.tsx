@@ -1,40 +1,49 @@
-import React, { memo, useCallback } from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React, { useEffect, memo } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import HomeStackScreen from './Home';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { LoginScreen, SignUpScreen } from 'screens/Login';
+import { useSelector } from 'react-redux';
+import { selectIsAuthenticated } from 'Store/Selector/auth';
+import BottomTabsNavigator, { BottomTabsParamList } from './BottomTabs';
+import { navigate, navigationRef } from './utils';
 
 export type RootStackParamList = {
-  HomeStack: undefined;
+  Login: undefined;
+  SignUp: undefined;
+  BottomTabs: BottomTabsParamList;
 };
 
-const Tab = createBottomTabNavigator<RootStackParamList>();
+const MainStack = createNativeStackNavigator<RootStackParamList>();
 
-const MainNavigator = () => {
-  const renderHomeIcon = useCallback(
-    (color: string, size: number) => <Icon name="home" color={color} size={size} />,
-    []
-  );
+function MainStackScreen() {
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  useEffect(() => {
+    if (isAuthenticated) {
+      //navigate to dashboard directly
+      navigate('BottomTabs');
+    }
+  }, [isAuthenticated]);
 
   return (
-    <NavigationContainer>
-      <Tab.Navigator
+    <NavigationContainer ref={navigationRef}>
+      <MainStack.Navigator
+        initialRouteName="Login"
         screenOptions={{
-          headerShown: false,
+          gestureEnabled: true,
         }}
-        initialRouteName="HomeStack"
       >
-        <Tab.Screen
-          name="HomeStack"
-          component={HomeStackScreen}
-          options={{
-            tabBarLabel: 'Dashboard',
-            tabBarIcon: ({ color, size }) => renderHomeIcon(color, size),
-          }}
-        />
-      </Tab.Navigator>
+        <MainStack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
+        <MainStack.Screen options={{ headerShown: false }} name="SignUp" component={SignUpScreen} />
+        {isAuthenticated && (
+          <MainStack.Screen
+            options={{ headerShown: false }}
+            name="BottomTabs"
+            component={BottomTabsNavigator}
+          />
+        )}
+      </MainStack.Navigator>
     </NavigationContainer>
   );
-};
+}
 
-export default memo(MainNavigator);
+export default memo(MainStackScreen);
