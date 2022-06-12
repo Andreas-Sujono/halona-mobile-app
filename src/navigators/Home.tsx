@@ -12,6 +12,7 @@ function HomeStackScreen() {
         component={DashboardScreen}
         options={{
           headerTitle: 'Home',
+          headerShown: false,
         }}
       />
     </HomeStack.Navigator>

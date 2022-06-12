@@ -12,6 +12,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1A257C7428561BB400CB7B6A /* hotel-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A257C7328561BB400CB7B6A /* hotel-icon.png */; };
 		1ACD9D962853546300BEF777 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 1ACD9D952853546300BEF777 /* Fonts */; };
 		7699B88040F8A987B510C191 /* libPods-halona-halonaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-halona-halonaTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -38,6 +39,8 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = halona/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = halona/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-halona-halonaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-halona-halonaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A257C7328561BB400CB7B6A /* hotel-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hotel-icon.png"; path = "../../../Downloads/hotel-icon.png"; sourceTree = "<group>"; };
+		1A257C7528561C9300CB7B6A /* hotel-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hotel-icon.png"; path = "../../../Downloads/hotel-icon.png"; sourceTree = "<group>"; };
 		1ACD9D952853546300BEF777 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = "../node_modules/react-native-vector-icons/Fonts"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-halona.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-halona.debug.xcconfig"; path = "Target Support Files/Pods-halona/Pods-halona.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-halona.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-halona.release.xcconfig"; path = "Target Support Files/Pods-halona/Pods-halona.release.xcconfig"; sourceTree = "<group>"; };
@@ -94,6 +97,8 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				1A257C7328561BB400CB7B6A /* hotel-icon.png */,
+				1A257C7528561C9300CB7B6A /* hotel-icon.png */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = halona;
@@ -248,6 +253,7 @@
 				1ACD9D962853546300BEF777 /* Fonts in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				1A257C7428561BB400CB7B6A /* hotel-icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

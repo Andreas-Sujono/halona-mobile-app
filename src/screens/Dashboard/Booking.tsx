@@ -1,12 +1,12 @@
 import React, { memo } from 'react';
 import { Layout, Text } from '@ui-kitten/components';
 
-function Summary() {
+function Booking() {
   return (
     <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text category="h5">Summary</Text>
+      <Text category="h5">Booking</Text>
     </Layout>
   );
 }
 
-export default memo(Summary);
+export default memo(Booking);

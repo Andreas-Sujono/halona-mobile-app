@@ -3,8 +3,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeStackScreen from './Home';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ProfileStackScreen from './Profile';
+import FinanceStackScreen from './Finance';
 
 export type BottomTabsParamList = {
+  FinanceStack: undefined;
   HomeStack: undefined;
   ProfileStack: undefined;
 };
@@ -12,6 +14,10 @@ export type BottomTabsParamList = {
 const Tab = createBottomTabNavigator<BottomTabsParamList>();
 
 const BottomTabsNavigator = () => {
+  const renderFinanceIcon = useCallback(
+    (color: string, size: number) => <Icon name="money" color={color} size={size} />,
+    []
+  );
   const renderHomeIcon = useCallback(
     (color: string, size: number) => <Icon name="home" color={color} size={size} />,
     []
@@ -29,11 +35,21 @@ const BottomTabsNavigator = () => {
       initialRouteName="HomeStack"
     >
       <Tab.Screen
+        name="FinanceStack"
+        component={FinanceStackScreen}
+        options={{
+          tabBarLabel: 'Finance',
+          tabBarIcon: ({ color, size }) => renderFinanceIcon(color, size),
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
         name="HomeStack"
         component={HomeStackScreen}
         options={{
           tabBarLabel: 'Dashboard',
           tabBarIcon: ({ color, size }) => renderHomeIcon(color, size),
+          headerShown: false,
         }}
       />
       <Tab.Screen

@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Layout, Text } from '@ui-kitten/components';
 
-function ProfileMain() {
+function ProfileMainScreen() {
   return (
     <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text category="h1">Profile DASHBOARD</Text>
@@ -9,4 +9,4 @@ function ProfileMain() {
   );
 }
 
-export default memo(ProfileMain);
+export default memo(ProfileMainScreen);

@@ -9,7 +9,11 @@
 - Axios
 - React query --> to handle API query, all caching is handled by this library. However, to enable the offline mode, all the data needs to be stored in the persisted redux store.
 - React navigation
-- 
+
+
+features:
+- slider bottom
+
 
 Extras:
 - offline --> can read from cache, but cannot post data to server. send notif if no internet, error
@@ -23,6 +27,9 @@ Extras:
     - E2E testing 
         - https://blog.bitrise.io/post/react-native-e2e-ui-testing-with-detox-and-bitrise
         - https://reime005.medium.com/react-native-end-to-end-testing-d488e010e39f
+- splash screen: https://blog.logrocket.com/building-a-splash-screen-in-react-native/
+- auto update, auto update splash screen, icon
+- change app icon: https://aboutreact.com/react-native-change-app-icon/
 
 
 Next:

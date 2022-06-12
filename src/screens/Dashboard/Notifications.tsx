@@ -1,12 +1,53 @@
-import React, { memo } from 'react';
-import { Layout, Text } from '@ui-kitten/components';
+import * as React from 'react';
+import { Card, Layout, Text } from '@ui-kitten/components';
+import { StyleSheet } from 'react-native';
 
 function Notifications() {
   return (
-    <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text category="h5">Notif</Text>
+    <Layout style={styles.container}>
+      <Card style={[styles.card, { flex: 1 }]}>
+        <Text style={styles.cardTitle}>Notifications</Text>
+        <Text category="p1" style={styles.cardValue}>
+          - A new book has been made to room 101
+        </Text>
+        <Text category="p1" style={styles.cardValue}>
+          - A new book has been made to room 101
+        </Text>
+        <Text category="p1" style={styles.cardValue}>
+          - A new book has been made to room 101
+        </Text>
+        <Text category="p1" style={styles.cardValue}>
+          - A new book has been made to room 101
+        </Text>
+      </Card>
     </Layout>
   );
 }
 
-export default memo(Notifications);
+const styles = StyleSheet.create({
+  container: {
+    width: '90%',
+    maxHeight: 200,
+    background: 'white',
+    shadowColor: 'grey',
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 15,
+    margin: 16,
+    marginTop: 16,
+    flexDirection: 'row',
+  },
+  card: {
+    flex: 1,
+    padding: 0,
+  },
+  cardTitle: {
+    color: 'grey',
+  },
+  cardValue: {
+    marginTop: 8,
+  },
+});
+
+export default Notifications;
