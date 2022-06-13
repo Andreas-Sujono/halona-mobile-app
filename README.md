@@ -52,3 +52,25 @@ Next:
 
 3) Build & Install Androind app on dev
 - npm run android
+
+
+#### App features
+- Home dashboard
+    - summary statistics: avail room, net income
+    - floor plan
+        - update room detail / status
+    - notification
+        - show all notification (date, time, by)
+
+- Finance
+    - summary statistics: 
+    - show 12 months this year
+        - show all months
+        - show all records
+        - filter by: income, cost, date / month range
+    - recent activities
+
+booking history
+    - search bar 
+        - filter by: date / month, status
+    - show all booking (infinite scrolling)

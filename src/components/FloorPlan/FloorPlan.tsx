@@ -1,14 +1,17 @@
-import React, { memo, useState } from 'react';
-import { Layout, Text, Divider } from '@ui-kitten/components';
+/* eslint-disable react-native/no-inline-styles */
+import React, { memo, useContext, useState } from 'react';
+import { Layout, Text, Divider, Button } from '@ui-kitten/components';
 import { Image, StyleSheet, View, Text as NativeText } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { RoomDetailDrawerContext } from 'Context/useRoomDetailBottomDrawerContext';
 
 export enum RoomStatus {
   NOT_AVAILABLE = 0,
   AVAILABLE = 1,
   BOOKED = 2,
   INHABITED = 3,
-  NEED_CLEAN = 4,
+  GUEST_OUT_NEED_CLEAN = 4,
+  NEED_CLEAN = 5,
 }
 
 export const mapStatusToInfo = {
@@ -28,6 +31,10 @@ export const mapStatusToInfo = {
     color: 'green',
     infoName: 'Inhabited',
   },
+  [RoomStatus.GUEST_OUT_NEED_CLEAN]: {
+    color: 'red',
+    infoName: 'Need to be clean',
+  },
   [RoomStatus.NEED_CLEAN]: {
     color: 'red',
     infoName: 'Need to be clean',
@@ -42,31 +49,31 @@ const floorPlanData = [
     rooms: [
       {
         id: 1,
-        roomName: '101',
+        name: '101',
         status: RoomStatus.AVAILABLE,
         currentGuest: null,
       },
       {
         id: 2,
-        roomName: '102',
+        name: '102',
         status: RoomStatus.BOOKED,
         currentGuest: null,
       },
       {
         id: 3,
-        roomName: '103',
+        name: '103',
         status: RoomStatus.BOOKED,
         currentGuest: null,
       },
       {
         id: 4,
-        roomName: '104',
+        name: '104',
         status: RoomStatus.BOOKED,
         currentGuest: null,
       },
       {
         id: 5,
-        roomName: '105',
+        name: '105',
         status: RoomStatus.BOOKED,
         currentGuest: null,
       },
@@ -78,43 +85,43 @@ const floorPlanData = [
     rooms: [
       {
         id: 1,
-        roomName: '201',
+        name: '201',
         status: RoomStatus.NEED_CLEAN,
         currentGuest: null,
       },
       {
         id: 2,
-        roomName: '202',
+        name: '202',
         status: RoomStatus.NOT_AVAILABLE,
         currentGuest: null,
       },
       {
         id: 3,
-        roomName: '203',
+        name: '203',
         status: RoomStatus.AVAILABLE,
         currentGuest: null,
       },
       {
         id: 4,
-        roomName: '204',
+        name: '204',
         status: RoomStatus.AVAILABLE,
         currentGuest: null,
       },
       {
         id: 5,
-        roomName: '205',
+        name: '205',
         status: RoomStatus.AVAILABLE,
         currentGuest: null,
       },
       {
         id: 6,
-        roomName: '206',
+        name: '206',
         status: RoomStatus.AVAILABLE,
         currentGuest: null,
       },
       {
         id: 7,
-        roomName: '207',
+        name: '207',
         status: RoomStatus.AVAILABLE,
         currentGuest: null,
       },
@@ -126,19 +133,19 @@ const floorPlanData = [
     rooms: [
       {
         id: 1,
-        roomName: '101',
+        name: '101',
         status: RoomStatus.AVAILABLE,
         currentGuest: null,
       },
       {
         id: 2,
-        roomName: '102',
+        name: '102',
         status: RoomStatus.AVAILABLE,
         currentGuest: null,
       },
       {
         id: 3,
-        roomName: '103',
+        name: '103',
         status: RoomStatus.AVAILABLE,
         currentGuest: null,
       },
@@ -150,6 +157,12 @@ function FloorPlan() {
   const [currentFloorId, setCurrentFloorId] = useState(floorPlanData[0].id);
 
   const chosenRooms = floorPlanData.find((item) => item.id === currentFloorId)?.rooms || [];
+  const roomDetailDrawerContext = useContext(RoomDetailDrawerContext);
+
+  const onClickRoom = (room: any) => {
+    roomDetailDrawerContext.setRoom(room);
+  };
+
   return (
     <Layout style={styles.container}>
       <View style={styles.buttonContainer}>
@@ -177,6 +190,17 @@ function FloorPlan() {
             </NativeText>
           </TouchableOpacity>
         ))}
+        <Button
+          style={{
+            width: 100,
+            marginLeft: 'auto',
+            paddingLeft: 0,
+            paddingRight: 0,
+            padding: 0,
+          }}
+        >
+          + Booking
+        </Button>
       </View>
 
       <Divider style={{ margin: 8 }} />
@@ -194,8 +218,9 @@ function FloorPlan() {
                     styles.room,
                     { backgroundColor: mapStatusToInfo[room.status].color },
                   ]}
+                  onPress={() => onClickRoom(room)}
                 >
-                  <Text>{room.roomName}</Text>
+                  <Text>{room.name}</Text>
                 </TouchableOpacity>
               ))
             }
@@ -234,8 +259,9 @@ function FloorPlan() {
                   styles.room,
                   { backgroundColor: mapStatusToInfo[room.status].color },
                 ]}
+                onPress={() => onClickRoom(room)}
               >
-                <Text>{room.roomName}</Text>
+                <Text>{room.name}</Text>
               </TouchableOpacity>
             ))
           }
@@ -267,6 +293,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
   },
   button: {
     width: 70,
@@ -325,6 +352,8 @@ const styles = StyleSheet.create({
     height: 20,
     backgroundColor: 'black',
     borderRadius: 20,
+    borderColor: '#f0f0f0',
+    borderWidth: 1,
   },
 });
 

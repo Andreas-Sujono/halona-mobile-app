@@ -4,11 +4,13 @@ import HomeStackScreen from './Home';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ProfileStackScreen from './Profile';
 import FinanceStackScreen from './Finance';
+import BookingHistoryStackScreen from './BookingHistory';
 
 export type BottomTabsParamList = {
   FinanceStack: undefined;
   HomeStack: undefined;
   ProfileStack: undefined;
+  BookingHistoryStack: undefined;
 };
 
 const Tab = createBottomTabNavigator<BottomTabsParamList>();
@@ -20,6 +22,10 @@ const BottomTabsNavigator = () => {
   );
   const renderHomeIcon = useCallback(
     (color: string, size: number) => <Icon name="home" color={color} size={size} />,
+    []
+  );
+  const renderBookingHistoryIcon = useCallback(
+    (color: string, size: number) => <Icon name="book" color={color} size={size} />,
     []
   );
   const renderProfileIcon = useCallback(
@@ -49,6 +55,15 @@ const BottomTabsNavigator = () => {
         options={{
           tabBarLabel: 'Dashboard',
           tabBarIcon: ({ color, size }) => renderHomeIcon(color, size),
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="BookingHistoryStack"
+        component={BookingHistoryStackScreen}
+        options={{
+          tabBarLabel: 'Booking History',
+          tabBarIcon: ({ color, size }) => renderBookingHistoryIcon(color, size),
           headerShown: false,
         }}
       />
