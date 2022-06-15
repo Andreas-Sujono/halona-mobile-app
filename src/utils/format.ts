@@ -23,3 +23,7 @@ export const getCurrentMonth = () => {
   const month = new Date().getMonth();
   return monthMap[month];
 };
+
+export const formatCurrency = (number: number) => {
+  return number.toLocaleString('en-us', { style: 'currency', currency: 'IDR' }).slice(0, -3);
+};

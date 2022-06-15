@@ -1,9 +1,11 @@
 import { Button, Divider, IndexPath, Input, Select, SelectItem, Text } from '@ui-kitten/components';
+import BookingCard from 'components/BookingCard';
 import BottomDrawer from 'components/BottomDrawer';
 import { DrawerState } from 'components/BottomDrawer/BottomDrawer';
-import { Room, RoomStatus } from 'model';
+import { Booking, BookingStatus, BookingType, Room, RoomStatus } from 'model';
 import React, { memo } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
+import { formatCurrency } from 'utils';
 
 const statusData = [
   {
@@ -30,6 +32,15 @@ function RoomDetailBottomDrawer({ room, onClose }: { room: Room; onClose: () => 
   };
 
   const displayStatusValue = statusData[selectedIndex.row].label;
+
+  const currentBooking: Booking = {
+    id: '1020102',
+    guestName: 'Andreas Sujono test',
+    rooms: [],
+    price: 180000,
+    status: BookingStatus.PAID,
+    type: BookingType.ONLINE,
+  };
 
   return (
     <BottomDrawer onDrawerStateChange={onDrawerStateChange}>
@@ -78,8 +89,8 @@ function RoomDetailBottomDrawer({ room, onClose }: { room: Room; onClose: () => 
           />
 
           <Text category="p1" style={styles.textHint}>
-            <Text style={{ fontWeight: 'bold', color: 'grey' }}>Baseline price:</Text>&nbsp; Rp
-            150,000
+            <Text style={{ fontWeight: 'bold', color: 'grey' }}>Baseline price:</Text>&nbsp;
+            {formatCurrency(150000)}
           </Text>
           <Text category="p1" style={styles.textHint}>
             <Text style={{ fontWeight: 'bold', color: 'grey' }}>Max People:</Text>&nbsp; 2
@@ -93,6 +104,7 @@ function RoomDetailBottomDrawer({ room, onClose }: { room: Room; onClose: () => 
           <Text category="h6" style={{ marginBottom: 12 }}>
             Current Booking
           </Text>
+          {!!currentBooking && <BookingCard booking={currentBooking} />}
         </ScrollView>
       </View>
     </BottomDrawer>

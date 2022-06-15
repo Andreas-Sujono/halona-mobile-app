@@ -6,7 +6,7 @@ function SummaryCard() {
   return (
     <Layout style={styles.container}>
       <Card style={[styles.card, { marginRight: 8, flex: 1, maxWidth: '40%' }]}>
-        <Text style={styles.cardTitle}>Available Rooms</Text>
+        <Text style={styles.cardTitle}>Rooms</Text>
         <Text category="h5" style={styles.cardValue}>
           10 / 20
         </Text>
@@ -24,7 +24,6 @@ function SummaryCard() {
 const styles = StyleSheet.create({
   container: {
     width: '90%',
-    height: 100,
     shadowColor: 'grey',
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.4,
@@ -34,6 +33,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     flexDirection: 'row',
     backgroundColor: 'transparent',
+    marginBottom: 12,
   },
   card: {
     flex: 1,

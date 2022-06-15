@@ -10,7 +10,10 @@ export type BottomTabsParamList = {
   FinanceStack: undefined;
   HomeStack: undefined;
   ProfileStack: undefined;
-  BookingHistoryStack: undefined;
+  BookingHistoryStack: {
+    BookingHistoryHome: undefined;
+    BookingHistoryAddBooking: undefined;
+  };
 };
 
 const Tab = createBottomTabNavigator<BottomTabsParamList>();
@@ -62,7 +65,7 @@ const BottomTabsNavigator = () => {
         name="BookingHistoryStack"
         component={BookingHistoryStackScreen}
         options={{
-          tabBarLabel: 'Booking History',
+          tabBarLabel: 'Booking History stack',
           tabBarIcon: ({ color, size }) => renderBookingHistoryIcon(color, size),
           headerShown: false,
         }}

@@ -4,6 +4,7 @@ import { Layout, Text, Divider, Button } from '@ui-kitten/components';
 import { Image, StyleSheet, View, Text as NativeText } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RoomDetailDrawerContext } from 'Context/useRoomDetailBottomDrawerContext';
+import { navigate } from 'navigators/utils';
 
 export enum RoomStatus {
   NOT_AVAILABLE = 0,
@@ -163,6 +164,17 @@ function FloorPlan() {
     roomDetailDrawerContext.setRoom(room);
   };
 
+  const goToAddEditBookingScreen = () =>
+    navigate('BottomTabs', {
+      screen: 'BookingHistoryStack',
+      params: {
+        screen: 'BookingHistoryAddBooking',
+        params: {
+          isEditMode: false,
+        },
+      },
+    });
+
   return (
     <Layout style={styles.container}>
       <View style={styles.buttonContainer}>
@@ -198,6 +210,7 @@ function FloorPlan() {
             paddingRight: 0,
             padding: 0,
           }}
+          onPress={goToAddEditBookingScreen}
         >
           + Booking
         </Button>

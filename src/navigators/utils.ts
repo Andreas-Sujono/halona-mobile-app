@@ -5,12 +5,11 @@
  * You can add other navigation functions that you need and export them
  */
 import { CommonActions, createNavigationContainerRef } from '@react-navigation/native';
-import { ValueOf } from 'utils/type';
 import { RootStackParamList } from './Main';
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
-export const navigate = (name: keyof RootStackParamList, params?: ValueOf<RootStackParamList>) => {
+export const navigate = (name: keyof RootStackParamList, params?: any) => {
   if (navigationRef.isReady()) {
     navigationRef.navigate(name, params);
   }
