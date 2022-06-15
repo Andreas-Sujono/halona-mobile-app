@@ -8,36 +8,68 @@ const bookingStatusData = [
   {
     label: 'Void',
     value: BookingStatus.VOID,
+    index: 0,
   },
   {
     label: 'Pending',
     value: BookingStatus.PENDING,
+    index: 1,
   },
   {
     label: 'Paid',
     value: BookingStatus.PAID,
+    index: 2,
   },
   {
     label: 'Cancelled',
     value: BookingStatus.CANCELLED,
+    index: 3,
   },
   {
     label: 'Cancelled and money has not returned',
     value: BookingStatus.CANCELLED_AND_MONEY_HAS_NOT_RETURNED,
+    index: 4,
   },
   {
     label: 'Cancelled and money returned',
     value: BookingStatus.CANCELLED_AND_MONEY_RETURNED,
+    index: 5,
   },
 ];
 const bookingTypeData = [
   {
     label: 'Online',
     value: BookingType.ONLINE,
+    index: 0,
   },
   {
     label: 'Walk In',
     value: BookingType.WALK_IN,
+    index: 1,
+  },
+];
+
+const mockRooms = [
+  {
+    id: '1212',
+    name: '101',
+    label: '101',
+    value: '21211',
+    index: 0,
+  },
+  {
+    id: '1412',
+    name: '102',
+    label: '102',
+    value: '1412',
+    index: 1,
+  },
+  {
+    id: '1512',
+    name: '103',
+    label: '103',
+    value: '1512',
+    index: 2,
   },
 ];
 
@@ -65,29 +97,31 @@ function AddEditBookingScreen({ route }: any) {
       [key]: value,
     });
   };
+  console.log('bookingData', bookingData);
 
   return (
     <ScrollView style={styles.Container}>
-      <Input
-        value={''}
+      <Select
         label="Rooms"
-        placeholder="Place your Text"
-        onChangeText={(nextValue) => console.log(nextValue)}
+        items={mockRooms}
+        onChangeValue={(values) => updateBookingdata('rooms', values)}
         style={styles.input}
+        selectedItem={bookingData.rooms as any}
+        isMultiple
       />
 
       <Select
         label="Booking Status"
         items={bookingStatusData}
-        onChangeValue={(value: string) => updateBookingdata('status', value)}
+        onChangeValue={(value: any) => updateBookingdata('status', value.value)}
         style={styles.input}
-        selectedValue={bookingData.status}
+        selectedValue={bookingData.status as any}
       />
 
       <Select
         label="Booking Type"
         items={bookingTypeData}
-        onChangeValue={(value: string) => updateBookingdata('type', value)}
+        onChangeValue={(value: any) => updateBookingdata('type', value.value)}
         style={styles.input}
         selectedValue={bookingData.type}
       />

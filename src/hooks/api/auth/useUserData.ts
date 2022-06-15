@@ -1,6 +1,7 @@
+import { selectUserId } from 'Store/Selector/auth';
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useAppDispatch } from './../../../Store/index';
-import { setIsAuthenticated } from './../../../Store/Actions/auth/general/general';
+import { useAppDispatch, useAppSelector } from './../../../Store/index';
+import { setIsAuthenticated, setUser } from './../../../Store/Actions/auth/general/general';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import Toast from 'react-native-toast-message';
 import { authService } from 'Services/Api/auth/general';
@@ -23,6 +24,7 @@ export const useLogin = () => {
 
   return useMutation(authService.login, {
     onSuccess: (res: LoginResponse) => {
+      console.log(res);
       if (res.accessToken) {
         //set token
         setToken(res?.accessToken);
@@ -31,7 +33,7 @@ export const useLogin = () => {
         Toast.show({
           type: 'error',
           text1: 'Server Error',
-          text2: 'Something wrong, Please try again!',
+          text2: 'Please input a correct username and password',
         });
       }
     },
@@ -43,12 +45,42 @@ export const useLogin = () => {
       Toast.show({
         type: 'error',
         text1: 'Error',
-        text2: 'Pleae input a correct username and password',
+        text2: 'Please try again!',
       });
     },
     onSettled: () => {
       //after login, refetch get my account
       queryClient.invalidateQueries(QUERY_KEY.MY_ACCOUNT);
+    },
+  });
+};
+
+const logout = async (data: any) => true;
+
+export const useLogout = () => {
+  const dispatch = useAppDispatch();
+
+  return useMutation(logout, {
+    onSuccess: (res) => {
+      setToken('');
+      dispatch(setIsAuthenticated(false));
+
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: 'You have been logged out',
+      });
+    },
+
+    onMutate: async (data) => {
+      /**Optimistic mutation */
+    },
+    onError: (_err, data, context) => {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please try again~',
+      });
     },
   });
 };
@@ -61,5 +93,47 @@ export const useMyAccountData = (onSuccess?: any, onError?: any) => {
     //   const superHeroNames = data.data.map(hero => hero.name)
     //   return superHeroNames
     // }
+  });
+};
+
+export const useUpdateMyAccount = () => {
+  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
+  const userId = useAppSelector(selectUserId);
+
+  return useMutation((data) => authService.updateAccount(data, userId), {
+    // onSuccess: (res: any) => {
+    // },
+
+    onMutate: async (data: any) => {
+      /**Optimistic mutation */
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries(QUERY_KEY.MY_ACCOUNT);
+
+      // Snapshot the previous value
+      const previousData: any = queryClient.getQueryData(QUERY_KEY.MY_ACCOUNT);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(QUERY_KEY.MY_ACCOUNT, { ...previousData, ...data });
+      dispatch(setUser({ ...previousData, ...data }));
+
+      // Return a context with the previous and new todo
+      return { previousData, newData: data };
+    },
+    onError: (_err, data: any, context: any) => {
+      //revert back updates
+      queryClient.setQueryData(QUERY_KEY.MY_ACCOUNT, context.previousData);
+      dispatch(setUser(context.previousData));
+
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please check again your profile!',
+      });
+    },
+    onSettled: () => {
+      //after login, refetch get my account
+      queryClient.invalidateQueries(QUERY_KEY.MY_ACCOUNT);
+    },
   });
 };

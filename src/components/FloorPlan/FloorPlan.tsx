@@ -1,10 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { memo, useContext, useState } from 'react';
 import { Layout, Text, Divider, Button } from '@ui-kitten/components';
-import { Image, StyleSheet, View, Text as NativeText } from 'react-native';
+import { Image, StyleSheet, View, Text as NativeText, ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RoomDetailDrawerContext } from 'Context/useRoomDetailBottomDrawerContext';
 import { navigate } from 'navigators/utils';
+import { useAllRoomsData, useFloorPlanData } from 'hooks/api/booking/useRoomData';
 
 export enum RoomStatus {
   NOT_AVAILABLE = 0,
@@ -155,6 +156,7 @@ const floorPlanData = [
 ];
 
 function FloorPlan() {
+  const { data: allRooms, isLoading } = useFloorPlanData();
   const [currentFloorId, setCurrentFloorId] = useState(floorPlanData[0].id);
 
   const chosenRooms = floorPlanData.find((item) => item.id === currentFloorId)?.rooms || [];
@@ -163,6 +165,7 @@ function FloorPlan() {
   const onClickRoom = (room: any) => {
     roomDetailDrawerContext.setRoom(room);
   };
+  console.log('allRooms: ', allRooms);
 
   const goToAddEditBookingScreen = () =>
     navigate('BottomTabs', {
@@ -174,6 +177,10 @@ function FloorPlan() {
         },
       },
     });
+
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
 
   return (
     <Layout style={styles.container}>

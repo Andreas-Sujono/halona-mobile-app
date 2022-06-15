@@ -9,10 +9,15 @@
 - Axios
 - React query --> to handle API query, all caching is handled by this library. However, to enable the offline mode, all the data needs to be stored in the persisted redux store.
 - React navigation
+- react-native-toast-message
+- styled-components
 
 
 features:
-- slider bottom
+- slider bottom drawer (DONE)
+- infinite scrolling (DONE*)
+- auto update app, apk
+- offline cache data
 
 
 Extras:

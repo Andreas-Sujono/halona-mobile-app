@@ -12,6 +12,7 @@ function ProfileStackScreen() {
         component={ProfileMain}
         options={{
           headerTitle: 'Profile',
+          headerShown: false,
         }}
       />
     </HomeStack.Navigator>

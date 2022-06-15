@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   bookingHeaderButton: {
     position: 'absolute',
     right: 16,
-    top: 40,
+    top: 44,
     borderRadius: 30,
     width: 40,
     height: 40,

@@ -19,11 +19,11 @@ export default class AuthService extends BaseService {
   };
 
   getAccount = async (userId: Id) => {
-    const res = await this.getRequest(`/user/${userId}`);
+    const res = await this.getRequest(`/users/${userId}`);
     return res.data;
   };
   getMyAccount = async () => {
-    const res = await this.getRequest('/user/me');
+    const res = await this.getRequest('/users/me');
     return res.data;
   };
 
@@ -60,7 +60,7 @@ export default class AuthService extends BaseService {
   };
 
   updateAccount = async (data: any, userId: Id) => {
-    const res = await this.patchRequest(`/user/${userId}`, data);
+    const res = await this.patchRequest(`/users/${userId}`, data);
     return res.data;
   };
 

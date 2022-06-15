@@ -5,6 +5,7 @@ import {
   loadSuccess as commonLoadSuccess,
   loadFailed as commonLoadFailed,
 } from '@/utils/redux';
+import { User } from 'model';
 
 const types = ['SET', 'RESET', 'LOAD_REQUEST', 'LOAD_SUCCESS', 'LOAD_FAILED'];
 
@@ -19,6 +20,7 @@ export const loadFailed = () => commonLoadFailed(ActionTypes);
 
 export const setIsAuthenticated = (isAuthenticated: boolean) =>
   set('isAuthenticated', isAuthenticated);
+export const setUser = (user: User) => set('user', user);
 
 export const reset = () => ({
   type: ActionTypes.RESET,

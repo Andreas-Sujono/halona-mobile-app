@@ -50,7 +50,7 @@ function LoginScreen() {
 
   const onLogin = async () => {
     await mutate({
-      email: username,
+      username: username,
       password,
     });
   };

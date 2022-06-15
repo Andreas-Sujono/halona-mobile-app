@@ -5,7 +5,7 @@ import { parseObjectToCamelCase } from 'utils';
 const API_URL =
   process.env.NODE_ENV === 'development' ? 'http://18.141.202.3' : 'http://18.141.202.3';
 
-export const API_BASE_URL_PATH = '/ntux-server/api/v1';
+export const API_BASE_URL_PATH = '/halona-server/api/v1';
 
 export interface ApiResponse {
   errorCode: number;
@@ -122,9 +122,9 @@ export default class BaseService {
     }
   };
 
-  deleteRequest = async (url: string, data: ApiRequestData, config: any = {}) => {
+  deleteRequest = async (url: string, data?: ApiRequestData, config: any = {}) => {
     try {
-      const parsedData = await this.parseData(data, config);
+      const parsedData = await this.parseData(data || {}, config);
       const finalUrl = this.joinURL(API_URL, this._baseUrl, url);
 
       const response: ApiResponse = await axios.delete(finalUrl, parsedData.config);
