@@ -12,11 +12,20 @@ import {
   View,
 } from 'react-native';
 import { useLogout, useMyAccountData } from 'hooks/api/auth/useUserData';
+import { navigate } from 'navigators/utils';
 
 function ProfileMainScreen() {
   const { mutate: logout } = useLogout();
   const { data: myAccount } = useMyAccountData();
   console.log('myAccount: ', myAccount);
+
+  const goToUpdateProfileScreen = () =>
+    navigate('BottomTabs', {
+      screen: 'ProfileStack',
+      params: {
+        screen: 'UpdateProfile',
+      },
+    });
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -36,7 +45,7 @@ function ProfileMainScreen() {
                   uri: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80',
                 }}
               />
-              <RNText style={styles.userNameText}>{myAccount.fullName}</RNText>
+              <RNText style={styles.userNameText}>{myAccount?.fullName}</RNText>
               <View style={styles.userAddressRow}>
                 <View>
                   <Icon name="location-arrow" style={styles.placeIcon} />
@@ -48,11 +57,15 @@ function ProfileMainScreen() {
             </View>
           </ImageBackground>
         </View>
-        <TouchableOpacity style={styles.pageSectionContainer}>
-          <Text category="p1">Update Profile</Text>
+        <TouchableOpacity style={styles.pageSectionContainer} onPress={goToUpdateProfileScreen}>
+          <Text category="p1" style={styles.pageLink}>
+            Update Profile
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.pageSectionContainer} onPress={() => logout(true)}>
-          <Text category="p1">Log out</Text>
+          <Text category="p1" style={styles.pageLink}>
+            Log out
+          </Text>
         </TouchableOpacity>
       </Layout>
     </ScrollView>
@@ -135,6 +148,9 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: 'lightgrey',
+  },
+  pageLink: {
+    color: '#0d43ee',
   },
 });
 

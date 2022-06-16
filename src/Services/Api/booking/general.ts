@@ -4,12 +4,17 @@ import BaseService, { API_BASE_URL_PATH } from '../base';
 
 export default class BookingService extends BaseService {
   getAllRooms = async () => {
-    const res = await this.getRequest('/rooms');
+    const res = await this.getRequest('/rooms?join=currentBooking');
     return res.data;
   };
 
   getFloorPlan = async () => {
     const res = await this.getRequest('/rooms/floor-plan');
+    return res.data;
+  };
+
+  getRoomSummary = async () => {
+    const res = await this.getRequest('/rooms/summary');
     return res.data;
   };
 
@@ -28,13 +33,20 @@ export default class BookingService extends BaseService {
     return res.data;
   };
 
-  getOneBooking = async (bookingId: Id) => {
+  getOneBooking = async (bookingId?: Id) => {
+    if (!bookingId) {
+      return {};
+    }
     const res = await this.getRequest(`/bookings/${bookingId}`);
     return res.data;
   };
 
-  updateRoom = async (roomId: Id, data: Room) => {
-    const res = await this.patchRequest(`/bookings/${roomId}`, data);
+  updateRoom = async (roomId: Id, data: Partial<Room>) => {
+    const res = await this.patchRequest(`/rooms/${roomId}`, {
+      status: data.status,
+      description: data.description,
+      name: data.name,
+    });
     return res.data;
   };
 
@@ -50,6 +62,16 @@ export default class BookingService extends BaseService {
 
   deleteBooking = async (bookingId: Id) => {
     const res = await this.deleteRequest(`/bookings/${bookingId}`);
+    return res.data;
+  };
+
+  checkInBooking = async (bookingId: Id) => {
+    const res = await this.patchRequest(`/bookings/${bookingId}/check-in`, {});
+    return res.data;
+  };
+
+  checkOutBooking = async (bookingId: Id) => {
+    const res = await this.patchRequest(`/bookings/${bookingId}/check-out`, {});
     return res.data;
   };
 }

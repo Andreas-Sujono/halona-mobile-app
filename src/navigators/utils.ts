@@ -9,9 +9,12 @@ import { RootStackParamList } from './Main';
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
-export const navigate = (name: keyof RootStackParamList, params?: any) => {
+export const navigate = (name: keyof RootStackParamList, params: any = {}) => {
   if (navigationRef.isReady()) {
-    navigationRef.navigate(name, params);
+    navigationRef.navigate(name, {
+      initial: false,
+      ...params,
+    });
   }
 };
 

@@ -5,16 +5,8 @@ import { Image, StyleSheet, View, Text as NativeText, ActivityIndicator } from '
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RoomDetailDrawerContext } from 'Context/useRoomDetailBottomDrawerContext';
 import { navigate } from 'navigators/utils';
-import { useAllRoomsData, useFloorPlanData } from 'hooks/api/booking/useRoomData';
-
-export enum RoomStatus {
-  NOT_AVAILABLE = 0,
-  AVAILABLE = 1,
-  BOOKED = 2,
-  INHABITED = 3,
-  GUEST_OUT_NEED_CLEAN = 4,
-  NEED_CLEAN = 5,
-}
+import { useFloorPlanData } from 'hooks/api/booking/useRoomData';
+import { Room, RoomStatus } from 'model';
 
 export const mapStatusToInfo = {
   [RoomStatus.NOT_AVAILABLE]: {
@@ -33,145 +25,36 @@ export const mapStatusToInfo = {
     color: 'green',
     infoName: 'Inhabited',
   },
-  [RoomStatus.GUEST_OUT_NEED_CLEAN]: {
+  [RoomStatus.GUEST_OUT_AND_NEED_TO_BE_CLEANED]: {
     color: 'red',
     infoName: 'Need to be clean',
   },
-  [RoomStatus.NEED_CLEAN]: {
+  [RoomStatus.ROOM_NEED_TO_BE_CLEANED]: {
     color: 'red',
     infoName: 'Need to be clean',
   },
 };
 
-//rooms start from top left to top right to bottom right
-const floorPlanData = [
-  {
-    id: 1,
-    floorName: 'Lv1',
-    rooms: [
-      {
-        id: 1,
-        name: '101',
-        status: RoomStatus.AVAILABLE,
-        currentGuest: null,
-      },
-      {
-        id: 2,
-        name: '102',
-        status: RoomStatus.BOOKED,
-        currentGuest: null,
-      },
-      {
-        id: 3,
-        name: '103',
-        status: RoomStatus.BOOKED,
-        currentGuest: null,
-      },
-      {
-        id: 4,
-        name: '104',
-        status: RoomStatus.BOOKED,
-        currentGuest: null,
-      },
-      {
-        id: 5,
-        name: '105',
-        status: RoomStatus.BOOKED,
-        currentGuest: null,
-      },
-    ],
-  },
-  {
-    id: 2,
-    floorName: 'Lv2',
-    rooms: [
-      {
-        id: 1,
-        name: '201',
-        status: RoomStatus.NEED_CLEAN,
-        currentGuest: null,
-      },
-      {
-        id: 2,
-        name: '202',
-        status: RoomStatus.NOT_AVAILABLE,
-        currentGuest: null,
-      },
-      {
-        id: 3,
-        name: '203',
-        status: RoomStatus.AVAILABLE,
-        currentGuest: null,
-      },
-      {
-        id: 4,
-        name: '204',
-        status: RoomStatus.AVAILABLE,
-        currentGuest: null,
-      },
-      {
-        id: 5,
-        name: '205',
-        status: RoomStatus.AVAILABLE,
-        currentGuest: null,
-      },
-      {
-        id: 6,
-        name: '206',
-        status: RoomStatus.AVAILABLE,
-        currentGuest: null,
-      },
-      {
-        id: 7,
-        name: '207',
-        status: RoomStatus.AVAILABLE,
-        currentGuest: null,
-      },
-    ],
-  },
-  {
-    id: 3,
-    floorName: 'Lv3',
-    rooms: [
-      {
-        id: 1,
-        name: '101',
-        status: RoomStatus.AVAILABLE,
-        currentGuest: null,
-      },
-      {
-        id: 2,
-        name: '102',
-        status: RoomStatus.AVAILABLE,
-        currentGuest: null,
-      },
-      {
-        id: 3,
-        name: '103',
-        status: RoomStatus.AVAILABLE,
-        currentGuest: null,
-      },
-    ],
-  },
-];
-
 function FloorPlan() {
   const { data: allRooms, isLoading } = useFloorPlanData();
-  const [currentFloorId, setCurrentFloorId] = useState(floorPlanData[0].id);
 
-  const chosenRooms = floorPlanData.find((item) => item.id === currentFloorId)?.rooms || [];
+  const [currentFloorId, setCurrentFloorId] = useState(0);
+
+  const chosenRooms = allRooms?.find((item: any) => item.id === currentFloorId)?.rooms || [];
   const roomDetailDrawerContext = useContext(RoomDetailDrawerContext);
+
+  // console.log('allRooms: ', allRooms);
 
   const onClickRoom = (room: any) => {
     roomDetailDrawerContext.setRoom(room);
   };
-  console.log('allRooms: ', allRooms);
 
   const goToAddEditBookingScreen = () =>
     navigate('BottomTabs', {
       screen: 'BookingHistoryStack',
       params: {
         screen: 'BookingHistoryAddBooking',
+        initial: false,
         params: {
           isEditMode: false,
         },
@@ -185,7 +68,7 @@ function FloorPlan() {
   return (
     <Layout style={styles.container}>
       <View style={styles.buttonContainer}>
-        {floorPlanData.map((item) => (
+        {allRooms.map((item: any) => (
           <TouchableOpacity
             key={item.id}
             style={[
@@ -230,7 +113,7 @@ function FloorPlan() {
           <View style={{ display: 'flex', flexDirection: 'row' }}>
             {
               //render top line
-              chosenRooms.slice(0, 2).map((room) => (
+              chosenRooms.slice(0, 2).map((room: Room) => (
                 <TouchableOpacity
                   key={room.id}
                   style={[
@@ -271,7 +154,7 @@ function FloorPlan() {
         <View style={styles.rightRooms}>
           {
             //render right line
-            chosenRooms.slice(2).map((room) => (
+            chosenRooms.slice(2).map((room: Room) => (
               <TouchableOpacity
                 key={room.id}
                 style={[

@@ -1,8 +1,9 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Button, Input } from '@ui-kitten/components';
 import { Booking, BookingStatus, BookingType } from 'model';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import Select from 'components/Select';
+import { useBookingData } from 'hooks/api/booking/useBookingData';
 
 const bookingStatusData = [
   {
@@ -73,9 +74,9 @@ const mockRooms = [
   },
 ];
 
-const BookingSummaryConfirmation = ({ booking }: { booking: Booking }) => {
-  return <View>summary</View>;
-};
+// const BookingSummaryConfirmation = ({ booking }: { booking: Booking }) => {
+//   return <View>summary</View>;
+// };
 
 function AddEditBookingScreen({ route }: any) {
   const isEditMode = route?.params?.isEditMode;
@@ -90,6 +91,17 @@ function AddEditBookingScreen({ route }: any) {
       type: BookingType.ONLINE,
     }
   );
+  const { data } = useBookingData(bookingData.id);
+
+  useEffect(() => {
+    if (data) {
+      setBookingData({
+        ...bookingData,
+        ...data,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   const updateBookingdata = (key: keyof Booking, value: any) => {
     setBookingData({
@@ -97,7 +109,6 @@ function AddEditBookingScreen({ route }: any) {
       [key]: value,
     });
   };
-  console.log('bookingData', bookingData);
 
   return (
     <ScrollView style={styles.Container}>
@@ -202,7 +213,7 @@ function AddEditBookingScreen({ route }: any) {
             marginBottom: 52,
             marginTop: 6,
             backgroundColor: '#de2944',
-            border: 0,
+            borderWidth: 0,
           }}
         >
           Delete

@@ -18,6 +18,14 @@ const mapBookingStatusToInfo = {
     label: 'Paid',
     color: 'green',
   },
+  [BookingStatus.CHECKED_IN_WITH_DEPOSIT]: {
+    label: 'Checked In with deposit',
+    color: 'green',
+  },
+  [BookingStatus.CHECKED_OUT]: {
+    label: 'Checked out',
+    color: 'green',
+  },
   [BookingStatus.CANCELLED]: {
     label: 'Cancelled',
     color: 'grey',
@@ -43,6 +51,7 @@ function BookingCard({ booking }: { booking: Partial<Booking> }) {
         params: {
           isEditMode: true,
           bookingData: booking,
+          initial: false,
         },
       },
     });

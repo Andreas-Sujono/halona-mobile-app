@@ -19,6 +19,7 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider } from '@ui-kitten/components';
 import Toast from 'react-native-toast-message';
 import { QueryClientProvider, QueryClient } from 'react-query';
+import { PopUpProvider } from 'components/PopUp';
 
 const queryClient = new QueryClient();
 
@@ -35,7 +36,9 @@ const App = () => (
     <PersistGate loading={null} persistor={persistor}>
       <ApplicationProvider {...eva} theme={eva.light}>
         <QueryClientProvider client={queryClient}>
-          <ApplicationMainNavigator />
+          <PopUpProvider>
+            <ApplicationMainNavigator />
+          </PopUpProvider>
         </QueryClientProvider>
       </ApplicationProvider>
     </PersistGate>

@@ -7,6 +7,7 @@ import Toast from 'react-native-toast-message';
 import { authService } from 'Services/Api/auth/general';
 import { QUERY_KEY } from '../queryKeys';
 import { setToken } from 'Services/Storage';
+import { User } from 'model';
 
 interface LoginRequest {
   username?: string;
@@ -24,7 +25,6 @@ export const useLogin = () => {
 
   return useMutation(authService.login, {
     onSuccess: (res: LoginResponse) => {
-      console.log(res);
       if (res.accessToken) {
         //set token
         setToken(res?.accessToken);
@@ -86,7 +86,7 @@ export const useLogout = () => {
 };
 
 export const useMyAccountData = (onSuccess?: any, onError?: any) => {
-  return useQuery(QUERY_KEY.MY_ACCOUNT, authService.getMyAccount, {
+  return useQuery<User>(QUERY_KEY.MY_ACCOUNT, authService.getMyAccount, {
     onSuccess,
     onError,
     // select: data => {
@@ -102,8 +102,15 @@ export const useUpdateMyAccount = () => {
   const userId = useAppSelector(selectUserId);
 
   return useMutation((data) => authService.updateAccount(data, userId), {
-    // onSuccess: (res: any) => {
-    // },
+    onSuccess: (res: any) => {
+      if (res.errorCode) {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: res.message,
+        });
+      }
+    },
 
     onMutate: async (data: any) => {
       /**Optimistic mutation */

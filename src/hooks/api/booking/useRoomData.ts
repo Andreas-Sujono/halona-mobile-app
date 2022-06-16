@@ -26,7 +26,8 @@ export const useAllRoomsData = (onSuccess?: any, onError?: any) => {
 export const useFloorPlanData = (onSuccess?: any, onError?: any) => {
   return useQuery(QUERY_KEY.ROOMS_FLOOR_PLAN, bookingService.getFloorPlan, {
     onSuccess: (res: any) => {
-      if (res.errorCode !== 0 && res.errorCode !== 200) {
+      if (res.errorCode) {
+        console.log('error happens: ', res);
         Toast.show({
           type: 'error',
           text1: 'Error',
@@ -39,6 +40,13 @@ export const useFloorPlanData = (onSuccess?: any, onError?: any) => {
     //   const superHeroNames = data.data.map(hero => hero.name)
     //   return superHeroNames
     // }
+    initialData: [
+      {
+        id: 1,
+        floorName: 'Lv1',
+        rooms: [],
+      },
+    ],
   });
 };
 
@@ -49,6 +57,7 @@ export const useRoomData = (roomId: Id, onSuccess?: any, onError?: any) => {
     {
       onSuccess: (res: any) => {
         if (res.errorCode !== 0 && res.errorCode !== 200) {
+          console.log('error happens: ', res);
           Toast.show({
             type: 'error',
             text1: 'Error',
@@ -69,8 +78,22 @@ export const useUpdateRoom = (roomId: Id) => {
   const queryClient = useQueryClient();
 
   return useMutation((data) => bookingService.updateRoom(roomId, data), {
-    // onSuccess: (res: any) => {
-    // },
+    onSuccess: (res: any) => {
+      if (res.error || res.errorCode) {
+        console.log('error happens: ', res);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: res.message,
+        });
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: 'You have successfully update room details',
+        });
+      }
+    },
 
     onMutate: async (data: any) => {
       /**Optimistic mutation */
@@ -82,7 +105,6 @@ export const useUpdateRoom = (roomId: Id) => {
     onError: (_err, data: any, context: any) => {
       //revert back updates
       queryClient.setQueryData([QUERY_KEY.ROOM, roomId], context.previousData);
-
       Toast.show({
         type: 'error',
         text1: 'Error',
@@ -92,6 +114,11 @@ export const useUpdateRoom = (roomId: Id) => {
     onSettled: () => {
       //after login, refetch get my account
       queryClient.invalidateQueries([QUERY_KEY.ROOM, roomId]);
+      queryClient.invalidateQueries(QUERY_KEY.ROOMS_FLOOR_PLAN);
     },
   });
+};
+
+export const useRoomSummaryData = () => {
+  return useQuery(QUERY_KEY.ROOM_SUMMARY, bookingService.getRoomSummary);
 };

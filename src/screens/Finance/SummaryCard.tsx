@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { Card, Layout, Text } from '@ui-kitten/components';
 import { StyleSheet } from 'react-native';
-import { getCurrentMonth } from 'utils';
+import { formatCurrency, getCurrentMonth } from 'utils';
+import { useFinanceSummaryThisMonthData } from 'hooks/api/finance/useFinanceRecordsData';
 
 function SummaryCard() {
+  const { data: financeSummaryThisMonthData } = useFinanceSummaryThisMonthData();
+
   return (
     <Layout style={styles.container}>
       <Card style={[styles.card, { flex: 1 }]}>
@@ -17,7 +20,7 @@ function SummaryCard() {
             },
           ]}
         >
-          + Rp10,000,000
+          + {formatCurrency(financeSummaryThisMonthData?.totalIncome)}
         </Text>
       </Card>
       <Card style={[styles.card, { flex: 1 }]}>
@@ -31,7 +34,7 @@ function SummaryCard() {
             },
           ]}
         >
-          - Rp2,000,000
+          - {formatCurrency(financeSummaryThisMonthData?.totalCost)}
         </Text>
       </Card>
     </Layout>

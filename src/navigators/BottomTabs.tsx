@@ -65,7 +65,7 @@ const BottomTabsNavigator = () => {
         name="BookingHistoryStack"
         component={BookingHistoryStackScreen}
         options={{
-          tabBarLabel: 'Booking History stack',
+          tabBarLabel: 'Booking History',
           tabBarIcon: ({ color, size }) => renderBookingHistoryIcon(color, size),
           headerShown: false,
         }}

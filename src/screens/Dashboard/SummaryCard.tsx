@@ -1,20 +1,28 @@
 import * as React from 'react';
 import { Card, Layout, Text } from '@ui-kitten/components';
 import { StyleSheet } from 'react-native';
+import { useRoomSummaryData } from 'hooks/api/booking/useRoomData';
+import { useFinanceSummaryThisMonthData } from 'hooks/api/finance/useFinanceRecordsData';
+import { formatCurrency } from 'utils';
 
 function SummaryCard() {
+  const { data: roomSummaryData } = useRoomSummaryData();
+  const { data: financeSummaryThisMonthData } = useFinanceSummaryThisMonthData();
+
   return (
     <Layout style={styles.container}>
       <Card style={[styles.card, { marginRight: 8, flex: 1, maxWidth: '40%' }]}>
         <Text style={styles.cardTitle}>Rooms</Text>
         <Text category="h5" style={styles.cardValue}>
-          10 / 20
+          {roomSummaryData?.availableRoomsCount || 0} / {roomSummaryData?.allRoomsCount || 0}
         </Text>
       </Card>
       <Card style={[styles.card, { flex: 1 }]}>
         <Text style={styles.cardTitle}>Net Income</Text>
         <Text category="h6" style={styles.cardValue}>
-          Rp 32,400,000
+          {formatCurrency(
+            financeSummaryThisMonthData?.totalIncome - financeSummaryThisMonthData?.totalCost
+          )}
         </Text>
       </Card>
     </Layout>

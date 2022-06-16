@@ -11,6 +11,8 @@ export enum BookingStatus {
   VOID = 'VOID',
   PENDING = 'PENDING',
   PAID = 'PAID',
+  CHECKED_IN_WITH_DEPOSIT = 'CHECKED_IN_WITH_DEPOSIT',
+  CHECKED_OUT = 'CHECKED_OUT',
   CANCELLED_AND_MONEY_RETURNED = 'CANCELLED_AND_MONEY_RETURNED',
   CANCELLED_AND_MONEY_HAS_NOT_RETURNED = 'CANCELLED_AND_MONEY_HAS_NOT_RETURNED',
   CANCELLED = 'CANCELLED',
@@ -19,6 +21,15 @@ export enum BookingStatus {
 export interface Room {
   name: string;
   id: string;
+  code?: string;
+  status: RoomStatus;
+  baselinePrice: number;
+  currentBooking: Booking;
+  description: string;
+  notes: string;
+  maxPeople: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export enum BookingType {
@@ -37,4 +48,5 @@ export interface Booking {
   guestPhoneNumber?: string;
   guestEmail?: string;
   price: number;
+  createdAt: Date;
 }

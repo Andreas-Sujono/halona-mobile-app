@@ -17,6 +17,7 @@ function BookingHistoryStackScreen() {
         screen: 'BookingHistoryAddBooking',
         params: {
           isEditMode: false,
+          initial: false,
         },
       },
     });
@@ -58,6 +59,7 @@ function BookingHistoryStackScreen() {
         options={{
           headerTitle: 'Create/Edit New Booking',
           headerShown: true,
+          headerBackTitle: 'Back',
           // header: renderEditBookingHeader,
         }}
       />
