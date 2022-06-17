@@ -11,7 +11,6 @@ export const useAllBookingsData = (onSuccess?: any, onError?: any) => {
     {
       getNextPageParam: (lastPage) => (lastPage.hasNextPage ? lastPage.page + 1 : undefined),
       onSuccess: (res: any) => {
-        console.log('res: ', res);
         if (res.errorCode) {
           Toast.show({
             type: 'error',
@@ -56,15 +55,26 @@ export const useCreateBooking = () => {
   const queryClient = useQueryClient();
 
   return useMutation((data) => bookingService.createBooking(data), {
-    // onSuccess: (res: any) => {
-    // },
+    onSuccess: (res: any) => {
+      if (res.errorCode) {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: res.message,
+        });
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: 'Success updating booking',
+        });
+      }
+    },
 
     onMutate: async (data: any) => {
-      /**Optimistic mutation */
       await queryClient.cancelQueries(QUERY_KEY.BOOKINGS);
       const previousData: any = queryClient.getQueryData(QUERY_KEY.BOOKINGS);
-      queryClient.setQueryData(QUERY_KEY.BOOKINGS, [data, ...previousData]);
-      return { previousData, newData: data };
+      return { previousData };
     },
     onError: (_err, data: any, context: any) => {
       //revert back updates
@@ -87,8 +97,21 @@ export const useUpdateBooking = (bookingId: Id) => {
   const queryClient = useQueryClient();
 
   return useMutation((data) => bookingService.updateBooking(bookingId, data), {
-    // onSuccess: (res: any) => {
-    // },
+    onSuccess: (res: any) => {
+      if (res.errorCode) {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: res.message,
+        });
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: 'Success creating booking',
+        });
+      }
+    },
 
     onMutate: async (data: any) => {
       /**Optimistic mutation */
@@ -120,8 +143,21 @@ export const useDeleteBooking = (bookingId: Id) => {
   const queryClient = useQueryClient();
 
   return useMutation(() => bookingService.deleteBooking(bookingId), {
-    // onSuccess: (res: any) => {
-    // },
+    onSuccess: (res: any) => {
+      if (res.errorCode) {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: res.message,
+        });
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: 'Success deleting booking',
+        });
+      }
+    },
 
     onMutate: async () => {
       /**Optimistic mutation */

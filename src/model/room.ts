@@ -56,4 +56,7 @@ export interface Booking {
   createdAt: Date;
   bookingStartDate: Date;
   bookingEndDate: Date;
+  guestNRIC?: string;
+  pendingPricePaid?: string;
+  description?: string;
 }

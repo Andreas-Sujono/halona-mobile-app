@@ -1,6 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator, NativeStackHeaderProps } from '@react-navigation/native-stack';
-import BookingHistoryScreen from 'screens/BookingHistory';
+import BookingHistoryScreen from 'screens/BookingHistory/MainScreen/index';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import Icon from 'react-native-vector-icons/FontAwesome';

@@ -62,12 +62,16 @@ export default class BookingService extends BaseService {
   };
 
   createBooking = async (data: Booking) => {
+    console.log('create data: ', data);
     const res = await this.postRequest('/bookings', data);
+    console.log('create book res: ', res);
     return res.data;
   };
 
   updateBooking = async (bookingId: Id, data: Room) => {
+    console.log(bookingId, data);
     const res = await this.patchRequest(`/bookings/${bookingId}`, data);
+    console.log('update book res: ', res);
     return res.data;
   };
 

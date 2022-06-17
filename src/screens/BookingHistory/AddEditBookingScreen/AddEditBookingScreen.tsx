@@ -1,14 +1,23 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { memo, useEffect, useState } from 'react';
 import { Button, Datepicker, Input, Text } from '@ui-kitten/components';
 import { Booking, BookingStatus, BookingType } from 'model';
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import Select from 'components/Select';
-import { useBookingData } from 'hooks/api/booking/useBookingData';
+import {
+  useBookingData,
+  useCreateBooking,
+  useDeleteBooking,
+  useUpdateBooking,
+} from 'hooks/api/booking/useBookingData';
 import { useAvailableRoomsData } from 'hooks/api/booking/useRoomData';
 import { useQueryClient } from 'react-query';
 import { QUERY_KEY } from 'hooks/api/queryKeys';
+import Toast from 'react-native-toast-message';
 import moment from 'moment';
 import { formatCurrency } from 'utils';
+import { navigate } from 'navigators/utils';
+import { PopUp } from 'components/PopUp';
 
 const bookingStatusData = [
   {
@@ -84,6 +93,9 @@ function AddEditBookingScreen({ route }: any) {
     }
   );
   const [showConfirmationPage, setShowConfirmationPage] = useState(false);
+  const { mutate: updateBooking, isLoading: isUpdateLoading } = useUpdateBooking(bookingData?.id);
+  const { mutate: createBooking, isLoading: isCreateLoading } = useCreateBooking();
+  const { mutate: deleteBooking, isLoading: isDeleteLoading } = useDeleteBooking(bookingData?.id);
 
   const queryClient = useQueryClient();
   const { data } = useBookingData(bookingData.id);
@@ -115,16 +127,72 @@ function AddEditBookingScreen({ route }: any) {
     });
   };
 
-  const onCreate = () => {
+  const validateBookingData = () => {
+    let errMessage = '';
+    if (!bookingData.guestName) {
+      errMessage = 'Missing Guest Name';
+    }
+    if (!bookingData.bookingStartDate) {
+      errMessage = 'Missing booking start date';
+    }
+    if (!bookingData.bookingEndDate) {
+      errMessage = 'Missing booking end date';
+    }
+    if (!bookingData.price) {
+      errMessage = 'Missing booking amount';
+    }
+    if (!bookingData.rooms.length) {
+      errMessage = 'Missing rooms';
+    }
+
+    if (errMessage) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: errMessage,
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const onGoToConfirm = () => {
     //validate
-    return;
+    if (!validateBookingData()) {
+      return;
+    }
+    setShowConfirmationPage(true);
+  };
+
+  const onCreate = async () => {
+    //validate
+    if (!validateBookingData()) {
+      return;
+    }
+    createBooking(bookingData);
+    setShowConfirmationPage(false);
+    navigate('BottomTabs', {
+      screen: 'BookingHistoryStack',
+    });
   };
 
   const onEdit = () => {
+    //validate
+    if (!validateBookingData()) {
+      return;
+    }
+    updateBooking(bookingData);
     return;
   };
 
   const onDelete = () => {
+    PopUp.show({
+      title: 'Are you sure you want to delete this booking?',
+      type: 'confirm',
+      textBody: 'You cannot undo this action!',
+      callback: () => deleteBooking({}),
+    });
     return;
   };
 
@@ -190,7 +258,7 @@ function AddEditBookingScreen({ route }: any) {
             marginTop: 16,
             marginBottom: 52,
           }}
-          onPress={() => setShowConfirmationPage(false)}
+          onPress={onCreate}
         >
           Confirm & Add
         </Button>
@@ -212,7 +280,7 @@ function AddEditBookingScreen({ route }: any) {
 
       <Select
         label="Booking Status"
-        items={!isEditMode ? bookingStatusData : bookingStatusData.slice(0, 3)}
+        items={isEditMode ? bookingStatusData : bookingStatusData.slice(0, 3)}
         onChangeValue={(value: any) => updateBookingdata('status', value.value)}
         style={styles.input}
         selectedValue={bookingData.status as any}
@@ -295,14 +363,28 @@ function AddEditBookingScreen({ route }: any) {
         onChangeText={(value: any) => updateBookingdata('guestEmail', value)}
         style={styles.input}
       />
-      {/* <Input
-        value={bookingData.guestName}
+      <Input
+        value={bookingData.guestNRIC}
         label="Guest NRIC number"
         placeholder="Place your Text"
-        onChangeText={(value: any) => updateBookingdata('guestEmail', value)}
+        onChangeText={(value: any) => updateBookingdata('guestNRIC', value)}
         style={styles.input}
       />
       <Input
+        value={bookingData.description}
+        label="Booking description/ notes"
+        placeholder="Ex: early check in, extends, late check out"
+        onChangeText={(value: any) => updateBookingdata('description', value)}
+        style={styles.input}
+      />
+      <Input
+        value={bookingData.pendingPricePaid}
+        label="Pending price paid"
+        placeholder="Place your Text"
+        onChangeText={(value: any) => updateBookingdata('pendingPricePaid', value)}
+        style={styles.input}
+      />
+      {/* <Input
         value={bookingData.guestName}
         label="Guest NRIC photo"
         placeholder="Place your Text"
@@ -315,7 +397,7 @@ function AddEditBookingScreen({ route }: any) {
             marginTop: 16,
             marginBottom: isEditMode ? 0 : 52,
           }}
-          onPress={() => setShowConfirmationPage(true)}
+          onPress={onGoToConfirm}
         >
           Add new Booking
         </Button>
@@ -326,8 +408,10 @@ function AddEditBookingScreen({ route }: any) {
             marginTop: 16,
             marginBottom: isEditMode ? 0 : 52,
           }}
+          onPress={onEdit}
+          disabled={isUpdateLoading}
         >
-          {isEditMode ? 'Edit' : 'Submit'}
+          {isUpdateLoading ? <ActivityIndicator /> : 'Edit Booking'}
         </Button>
       )}
       {isEditMode && (
@@ -338,6 +422,7 @@ function AddEditBookingScreen({ route }: any) {
             backgroundColor: '#de2944',
             borderWidth: 0,
           }}
+          onPress={onDelete}
         >
           Delete
         </Button>
