@@ -122,3 +122,7 @@ export const useUpdateRoom = (roomId: Id) => {
 export const useRoomSummaryData = () => {
   return useQuery(QUERY_KEY.ROOM_SUMMARY, bookingService.getRoomSummary);
 };
+
+export const useAvailableRoomsData = () => {
+  return useQuery(QUERY_KEY.AVAIL_ROOMS, bookingService.getAvailableRooms);
+};

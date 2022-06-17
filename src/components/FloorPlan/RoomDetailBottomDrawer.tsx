@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button, Divider, IndexPath, Input, Text } from '@ui-kitten/components';
 import BookingCard from 'components/BookingCard';
+import { PopUp } from 'components/PopUp';
 import BottomDrawer from 'components/PopUp/BottomDrawer';
 import { DrawerState } from 'components/PopUp/BottomDrawer/BottomDrawer';
 import Select from 'components/Select';
 import { useUpdateRoom } from 'hooks/api/booking/useRoomData';
 import { Room, RoomStatus } from 'model';
+import { navigate } from 'navigators/utils';
 import React, { memo, useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { formatCurrency } from 'utils';
@@ -68,7 +70,31 @@ function RoomDetailBottomDrawer({ room, onClose }: { room: Room; onClose: () => 
     mutate(roomData);
   };
 
+  const goToAddEditBookingScreen = () =>
+    navigate('BottomTabs', {
+      screen: 'BookingHistoryStack',
+      params: {
+        screen: 'BookingHistoryAddBooking',
+        initial: false,
+        params: {
+          isEditMode: false,
+        },
+      },
+    });
+
   const onCheckInOrOutBooking = () => {
+    let action = null;
+    if (room.status === RoomStatus.BOOKED || room.status === RoomStatus.AVAILABLE) {
+      action = 'Check In';
+    }
+    if (room.status === RoomStatus.INHABITED) {
+      action = 'Check Out';
+    }
+    PopUp.show({
+      title: `Are you sure you want to ${action} this booking?`,
+      type: 'confirm',
+      textBody: 'You cannot undo this action!',
+    });
     if (room.status === RoomStatus.BOOKED || room.status === RoomStatus.AVAILABLE) {
       //handle check in here
     }
@@ -154,10 +180,36 @@ function RoomDetailBottomDrawer({ room, onClose }: { room: Room; onClose: () => 
               >
                 {room.status === RoomStatus.BOOKED ? 'Check In' : 'Check Out'}
               </Button>
+
+              <Button
+                onPress={goToAddEditBookingScreen}
+                appearance="outline"
+                style={{ marginTop: 24 }}
+              >
+                Borrow Item
+              </Button>
+
+              <Button
+                onPress={goToAddEditBookingScreen}
+                appearance="outline"
+                style={{ marginTop: 24 }}
+              >
+                Order Food
+              </Button>
             </>
           )}
           {!room?.currentBooking && (
-            <Text style={{ color: 'grey' }}>No Booking on this room, yet!</Text>
+            <>
+              <Text style={{ color: 'grey' }}>No Booking on this room, yet!</Text>
+
+              <Button
+                onPress={goToAddEditBookingScreen}
+                appearance="outline"
+                style={{ marginTop: 24 }}
+              >
+                Add New Booking
+              </Button>
+            </>
           )}
         </ScrollView>
       </View>

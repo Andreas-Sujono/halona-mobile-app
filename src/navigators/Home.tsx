@@ -1,6 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import DashboardScreen from 'screens/Dashboard';
+import DashboardScreen from 'screens/Dashboard/MainScreen';
 import { RoomDetailDrawerProvider } from 'Context/useRoomDetailBottomDrawerContext';
 
 const HomeStack = createNativeStackNavigator();

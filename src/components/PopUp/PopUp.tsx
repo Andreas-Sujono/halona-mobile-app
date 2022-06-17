@@ -15,6 +15,19 @@ interface Props {}
 
 export type PopUpType = 'success' | 'danger' | 'warning' | 'confirm';
 
+interface Config {
+  popupHeight?: number;
+  title?: string;
+  textBody?: string;
+  type?: PopUpType;
+  buttonEnabled?: boolean;
+  buttonText?: string;
+  confirmText?: string;
+  callback?: any;
+  cancelCallback?: any;
+  start?: boolean;
+}
+
 class Popup extends PureComponent {
   static popupInstance: Popup;
   height: number;
@@ -66,7 +79,7 @@ class Popup extends PureComponent {
     this.state = this.defaultState;
   }
 
-  static show({ ...config }) {
+  static show(config: Config) {
     this.popupInstance.start(config);
   }
 
@@ -91,17 +104,17 @@ class Popup extends PureComponent {
         Animated.sequence([
           Animated.timing(this.state.positionView, {
             toValue: 0,
-            duration: 100,
+            duration: 50,
             useNativeDriver: this.state.useNativeDriver,
           }),
           Animated.timing(this.state.opacity, {
             toValue: 1,
-            duration: 300,
+            duration: 150,
             useNativeDriver: this.state.useNativeDriver,
           }),
           Animated.spring(this.state.positionPopup, {
             toValue: this.height / 2 - this.state.popupHeight / 2,
-            bounciness: 15,
+            bounciness: 10,
             useNativeDriver: this.state.useNativeDriver,
           }),
         ]).start();
@@ -139,7 +152,7 @@ class Popup extends PureComponent {
     });
   }
 
-  handleImage(type: PopUpType) {
+  handleImage(type?: PopUpType) {
     return {
       uri: 'https://icons.veryicon.com/png/o/miscellaneous/cloud-call-center/success-24.png',
     };
@@ -218,13 +231,14 @@ class Popup extends PureComponent {
             )}
             <Text style={[styles.Desc, this.state.descTextStyle]}>{textBody}</Text>
             {BodyComponentElement ? <BodyComponentElement {...this.props} /> : null}
-            <View style={this.state.buttonContentStyle}>
+            <View style={[styles.buttonContentStyle, this.state.buttonContentStyle]}>
               {buttonEnabled && (
                 <TouchableOpacity
                   style={[styles.Button, (styles as any)[typeName], this.state.okButtonStyle]}
                   onPress={() => {
                     if (typeof callback === 'function') {
-                      return callback();
+                      callback();
+                      return this.hidePopup();
                     }
                   }}
                 >
@@ -239,7 +253,8 @@ class Popup extends PureComponent {
                     style={[styles.Button, styles.confirm, this.state.confirmButtonStyle]}
                     onPress={() => {
                       if (typeof cancelCallback === 'function') {
-                        return cancelCallback();
+                        cancelCallback();
+                        this.hidePopup();
                       } else {
                         this.hidePopup();
                       }
@@ -316,10 +331,10 @@ const styles = StyleSheet.create({
   },
   Button: {
     flex: 1,
-    height: 48,
+    height: 36,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 12,
     borderRadius: 8,
     backgroundColor: '#702c91',
   },
@@ -332,22 +347,25 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   successButtonStyle: {
-    backgroundColor: '#702c91',
+    backgroundColor: '#39c866',
   },
   dangerButtonStyle: {
-    backgroundColor: '#702c91',
+    backgroundColor: '#d13434',
   },
   warningButtonStyle: {
-    backgroundColor: '#702c91',
+    backgroundColor: '#def959',
   },
   confirmButtonStyle: {
-    backgroundColor: '#702c91',
+    backgroundColor: '#39c866',
   },
   confirm: {
     backgroundColor: 'transparent',
   },
   confirmText: {
     color: '#111111',
+  },
+  buttonContentStyle: {
+    marginTop: 12,
   },
 });
 

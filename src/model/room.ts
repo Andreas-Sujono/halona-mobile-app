@@ -30,6 +30,11 @@ export interface Room {
   maxPeople: number;
   createdAt?: Date;
   updatedAt?: Date;
+
+  /*for select*/
+  label?: string;
+  value?: string;
+  index?: number;
 }
 
 export enum BookingType {
@@ -49,4 +54,6 @@ export interface Booking {
   guestEmail?: string;
   price: number;
   createdAt: Date;
+  bookingStartDate: Date;
+  bookingEndDate: Date;
 }

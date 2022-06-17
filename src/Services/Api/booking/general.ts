@@ -20,6 +20,17 @@ export default class BookingService extends BaseService {
 
   getAvailableRooms = async () => {
     const res = await this.getRequest('/rooms/available');
+    if (res?.data?.length) {
+      res.data.sort((a: Room, b: Room) =>
+        a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
+      );
+      res.data = res.data.map((item: Room, idx: number) => ({
+        ...item,
+        label: item.name,
+        value: item.id,
+        index: idx,
+      }));
+    }
     return res.data;
   };
 

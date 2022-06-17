@@ -1,6 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import FinanceMainScreen from 'screens/Finance';
+import FinanceMainScreen from 'screens/Finance/MainScreen';
 
 const HomeStack = createNativeStackNavigator();
 

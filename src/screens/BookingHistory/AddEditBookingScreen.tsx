@@ -1,9 +1,14 @@
 import React, { memo, useEffect, useState } from 'react';
-import { Button, Input } from '@ui-kitten/components';
+import { Button, Datepicker, Input, Text } from '@ui-kitten/components';
 import { Booking, BookingStatus, BookingType } from 'model';
-import { StyleSheet, ScrollView, View } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import Select from 'components/Select';
 import { useBookingData } from 'hooks/api/booking/useBookingData';
+import { useAvailableRoomsData } from 'hooks/api/booking/useRoomData';
+import { useQueryClient } from 'react-query';
+import { QUERY_KEY } from 'hooks/api/queryKeys';
+import moment from 'moment';
+import { formatCurrency } from 'utils';
 
 const bookingStatusData = [
   {
@@ -21,6 +26,18 @@ const bookingStatusData = [
     value: BookingStatus.PAID,
     index: 2,
   },
+
+  //must handle separately
+  {
+    label: 'Paid & Checked In with deposit',
+    value: BookingStatus.CHECKED_IN_WITH_DEPOSIT,
+    index: 4,
+  },
+  {
+    label: 'Checked Out',
+    value: BookingStatus.CHECKED_OUT,
+    index: 5,
+  },
   {
     label: 'Cancelled',
     value: BookingStatus.CANCELLED,
@@ -29,12 +46,12 @@ const bookingStatusData = [
   {
     label: 'Cancelled and money has not returned',
     value: BookingStatus.CANCELLED_AND_MONEY_HAS_NOT_RETURNED,
-    index: 4,
+    index: 3,
   },
   {
     label: 'Cancelled and money returned',
     value: BookingStatus.CANCELLED_AND_MONEY_RETURNED,
-    index: 5,
+    index: 4,
   },
 ];
 const bookingTypeData = [
@@ -50,37 +67,12 @@ const bookingTypeData = [
   },
 ];
 
-const mockRooms = [
-  {
-    id: '1212',
-    name: '101',
-    label: '101',
-    value: '21211',
-    index: 0,
-  },
-  {
-    id: '1412',
-    name: '102',
-    label: '102',
-    value: '1412',
-    index: 1,
-  },
-  {
-    id: '1512',
-    name: '103',
-    label: '103',
-    value: '1512',
-    index: 2,
-  },
-];
-
 // const BookingSummaryConfirmation = ({ booking }: { booking: Booking }) => {
 //   return <View>summary</View>;
 // };
 
 function AddEditBookingScreen({ route }: any) {
   const isEditMode = route?.params?.isEditMode;
-
   const [bookingData, setBookingData] = useState<Booking>(
     route.params?.bookingData || {
       id: '',
@@ -91,7 +83,20 @@ function AddEditBookingScreen({ route }: any) {
       type: BookingType.ONLINE,
     }
   );
+  const [showConfirmationPage, setShowConfirmationPage] = useState(false);
+
+  const queryClient = useQueryClient();
   const { data } = useBookingData(bookingData.id);
+  const { data: availableRooms } = useAvailableRoomsData();
+
+  useEffect(() => {
+    queryClient.invalidateQueries(QUERY_KEY.AVAIL_ROOMS);
+
+    if (bookingData.id) {
+      queryClient.invalidateQueries([QUERY_KEY.BOOKING, bookingData.id]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (data) {
@@ -110,23 +115,108 @@ function AddEditBookingScreen({ route }: any) {
     });
   };
 
+  const onCreate = () => {
+    //validate
+    return;
+  };
+
+  const onEdit = () => {
+    return;
+  };
+
+  const onDelete = () => {
+    return;
+  };
+
+  if (showConfirmationPage) {
+    return (
+      <ScrollView style={styles.Container}>
+        <Text category="h6" style={{ marginBottom: 18 }}>
+          Confirmation Page:
+        </Text>
+        <Text style={styles.confirmationInputLabel}>
+          Guest Name: <Text style={styles.confirmationInputValue}>{bookingData.guestName}</Text>
+        </Text>
+        <Text style={styles.confirmationInputLabel}>
+          Guest Email: <Text style={styles.confirmationInputValue}>{bookingData.guestEmail}</Text>
+        </Text>
+        <Text style={styles.confirmationInputLabel}>
+          Guest Phone Number:{' '}
+          <Text style={styles.confirmationInputValue}>{bookingData.guestPhoneNumber}</Text>
+        </Text>
+        <Text style={styles.confirmationInputLabel}>
+          Guest NRIC: <Text style={styles.confirmationInputValue}>{bookingData.status}</Text>
+        </Text>
+        <Text style={styles.confirmationInputLabel}>
+          Rooms:{' '}
+          <Text style={styles.confirmationInputValue}>
+            {bookingData.rooms.map((item) => item.name).join(', ')}
+          </Text>
+        </Text>
+
+        <Text style={styles.confirmationInputLabel}>
+          Booking Status: <Text style={styles.confirmationInputValue}>{bookingData.status}</Text>
+        </Text>
+        <Text style={styles.confirmationInputLabel}>
+          Booking Type: <Text style={styles.confirmationInputValue}>{bookingData.type}</Text>
+        </Text>
+        <Text style={styles.confirmationInputLabel}>
+          Booking start date:{' '}
+          <Text style={styles.confirmationInputValue}>
+            {new Date(bookingData.bookingStartDate).toLocaleDateString()}
+          </Text>
+        </Text>
+        <Text style={styles.confirmationInputLabel}>
+          Booking End Date:{' '}
+          <Text style={styles.confirmationInputValue}>
+            {new Date(bookingData.bookingEndDate).toLocaleDateString()}
+          </Text>
+        </Text>
+        <Text style={styles.confirmationInputLabel}>
+          Total Price:{' '}
+          <Text style={styles.confirmationInputValue}>{formatCurrency(bookingData.price)}</Text>
+        </Text>
+        <Button
+          style={{
+            marginTop: 16,
+          }}
+          onPress={() => setShowConfirmationPage(false)}
+          appearance="outline"
+        >
+          Cancel
+        </Button>
+        <Button
+          style={{
+            marginTop: 16,
+            marginBottom: 52,
+          }}
+          onPress={() => setShowConfirmationPage(false)}
+        >
+          Confirm & Add
+        </Button>
+      </ScrollView>
+    );
+  }
+
   return (
     <ScrollView style={styles.Container}>
       <Select
         label="Rooms"
-        items={mockRooms}
+        items={availableRooms || []}
         onChangeValue={(values) => updateBookingdata('rooms', values)}
         style={styles.input}
         selectedItem={bookingData.rooms as any}
         isMultiple
+        placeholder="select room numbers"
       />
 
       <Select
         label="Booking Status"
-        items={bookingStatusData}
+        items={!isEditMode ? bookingStatusData : bookingStatusData.slice(0, 3)}
         onChangeValue={(value: any) => updateBookingdata('status', value.value)}
         style={styles.input}
         selectedValue={bookingData.status as any}
+        // disabled={!isEditMode}
       />
 
       <Select
@@ -140,73 +230,106 @@ function AddEditBookingScreen({ route }: any) {
       {bookingData.type === BookingType.ONLINE && (
         <>
           <Input
-            value={''}
+            value={bookingData.onlineProviderName}
             label="Online Provider Name"
             placeholder="Place your Text"
-            onChangeText={(nextValue) => console.log(nextValue)}
+            onChangeText={(value: any) => updateBookingdata('onlineProviderName', value)}
             style={styles.input}
           />
           <Input
-            value={''}
+            value={bookingData.onlineProviderId}
             label="Online Provider Id"
             placeholder="Place your Text"
-            onChangeText={(nextValue) => console.log(nextValue)}
+            onChangeText={(value: any) => updateBookingdata('onlineProviderId', value)}
             style={styles.input}
           />
         </>
       )}
 
+      <Datepicker
+        label="Booking Start Date"
+        placeholder="Booking Start Date"
+        filter={(date) => new Date(date) >= moment().startOf('day').toDate()}
+        style={styles.input}
+        onSelect={(date) => updateBookingdata('bookingStartDate', date)}
+        date={bookingData.bookingStartDate ? new Date(bookingData.bookingStartDate) : undefined}
+      />
+
+      <Datepicker
+        label="Booking End Date"
+        placeholder="Booking End Date"
+        filter={(date) => new Date(date) >= moment().startOf('day').toDate()}
+        style={styles.input}
+        onSelect={(date) => updateBookingdata('bookingEndDate', date)}
+        date={bookingData.bookingEndDate ? new Date(bookingData.bookingEndDate) : undefined}
+      />
+
       <Input
         value={bookingData.price.toString()}
         label="Total Price*"
         placeholder="Place your Text"
-        onChangeText={(nextValue) => console.log(nextValue)}
+        onChangeText={(value: any) => updateBookingdata('price', value)}
         style={styles.input}
+        keyboardType="decimal-pad"
       />
 
       <Input
         value={bookingData.guestName}
         label="Guest Name*"
         placeholder="Place your Text"
-        onChangeText={(nextValue) => console.log(nextValue)}
+        onChangeText={(value: any) => updateBookingdata('guestName', value)}
         style={styles.input}
       />
       <Input
         value={bookingData.guestPhoneNumber}
         label="Guest Phone Number"
         placeholder="Place your Text"
-        onChangeText={(nextValue) => console.log(nextValue)}
+        onChangeText={(value: any) => updateBookingdata('guestPhoneNumber', value)}
         style={styles.input}
+        keyboardType="number-pad"
       />
       <Input
         value={bookingData.guestEmail}
         label="Guest Email"
         placeholder="Place your Text"
-        onChangeText={(nextValue) => console.log(nextValue)}
+        onChangeText={(value: any) => updateBookingdata('guestEmail', value)}
         style={styles.input}
       />
-      <Input
+      {/* <Input
         value={bookingData.guestName}
         label="Guest NRIC number"
         placeholder="Place your Text"
-        onChangeText={(nextValue) => console.log(nextValue)}
+        onChangeText={(value: any) => updateBookingdata('guestEmail', value)}
         style={styles.input}
       />
       <Input
         value={bookingData.guestName}
         label="Guest NRIC photo"
         placeholder="Place your Text"
-        onChangeText={(nextValue) => console.log(nextValue)}
+        onChangeText={(value: any) => updateBookingdata('onlineProviderName', value)}
         style={styles.input}
-      />
-      <Button
-        style={{
-          marginTop: 16,
-          marginBottom: isEditMode ? 0 : 52,
-        }}
-      >
-        {isEditMode ? 'Edit' : 'Submit'}
-      </Button>
+      /> */}
+      {!isEditMode && (
+        <Button
+          style={{
+            marginTop: 16,
+            marginBottom: isEditMode ? 0 : 52,
+          }}
+          onPress={() => setShowConfirmationPage(true)}
+        >
+          Add new Booking
+        </Button>
+      )}
+      {isEditMode && (
+        <Button
+          style={{
+            marginTop: 16,
+            marginBottom: isEditMode ? 0 : 52,
+          }}
+        >
+          {isEditMode ? 'Edit' : 'Submit'}
+        </Button>
+      )}
       {isEditMode && (
         <Button
           style={{
@@ -232,6 +355,13 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 12,
+  },
+  confirmationInputLabel: {
+    color: 'grey',
+    marginBottom: 8,
+  },
+  confirmationInputValue: {
+    fontWeight: '500',
   },
 });
 

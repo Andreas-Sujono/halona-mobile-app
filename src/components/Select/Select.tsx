@@ -17,6 +17,7 @@ interface Props {
   isMultiple?: boolean;
   style?: any;
   label?: string;
+  placeholder?: string;
   disabled?: boolean;
 }
 
@@ -30,6 +31,7 @@ function CustomSelect({
   style,
   label,
   disabled = false,
+  placeholder = 'Select an option',
 }: Props) {
   const [selectedIndexPath, setSelectedIndexPath] = React.useState<any>(
     isMultiple ? [] : new IndexPath(0)
@@ -78,12 +80,10 @@ function CustomSelect({
     : '';
 
   useEffect(() => {
-    if (selectedItems.length) {
-      if (isMultiple) {
-        setSelectedIndexPath(selectedItems.map((item) => new IndexPath(item.index)));
-      } else {
-        setSelectedIndexPath(new IndexPath(selectedItems[0].index));
-      }
+    if (isMultiple) {
+      setSelectedIndexPath(selectedItems.map((item) => new IndexPath(item.index)));
+    } else {
+      setSelectedIndexPath(new IndexPath(selectedItems[0].index));
     }
 
     // if (selectedValues.length) {
@@ -104,7 +104,7 @@ function CustomSelect({
       style={style}
       value={displayValue}
       multiSelect={isMultiple}
-      placeholder="select option"
+      placeholder={placeholder}
       disabled={disabled}
     >
       {items.map((item) => (
