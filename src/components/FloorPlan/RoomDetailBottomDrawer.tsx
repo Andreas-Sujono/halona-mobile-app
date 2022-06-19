@@ -40,6 +40,11 @@ const statusData = [
     value: RoomStatus.ROOM_NEED_TO_BE_CLEANED,
     index: 4,
   },
+  {
+    label: 'Guest out & Need to be cleaned',
+    value: RoomStatus.GUEST_OUT_AND_NEED_TO_BE_CLEANED,
+    index: 5,
+  },
 ];
 
 function RoomDetailBottomDrawer({ room, onClose }: { room: Room; onClose: () => void }) {
@@ -181,7 +186,7 @@ function RoomDetailBottomDrawer({ room, onClose }: { room: Room; onClose: () => 
                 {room.status === RoomStatus.BOOKED ? 'Check In' : 'Check Out'}
               </Button>
 
-              <Button
+              {/* <Button
                 onPress={goToAddEditBookingScreen}
                 appearance="outline"
                 style={{ marginTop: 24 }}
@@ -195,7 +200,7 @@ function RoomDetailBottomDrawer({ room, onClose }: { room: Room; onClose: () => 
                 style={{ marginTop: 24 }}
               >
                 Order Food
-              </Button>
+              </Button> */}
             </>
           )}
           {!room?.currentBooking && (

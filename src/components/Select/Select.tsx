@@ -36,6 +36,7 @@ function CustomSelect({
   const [selectedIndexPath, setSelectedIndexPath] = React.useState<any>(
     isMultiple ? [] : new IndexPath(0)
   );
+  items = items || [];
 
   const onSelect = useCallback(
     (indexPath: IndexPath | IndexPath[]) => {
@@ -56,11 +57,12 @@ function CustomSelect({
   let displayValue = '';
   const selectedItems: Item[] = useMemo(() => {
     if (selectedItem) {
-      return isMultiple ? (selectedItem as Item[]) : [selectedItem as Item];
+      return isMultiple ? (selectedItem as Item[]) || [] : [selectedItem as Item];
     } else if (selectedValue) {
       if (isMultiple) {
-        //handle later;
-        return [];
+        const valueSets = new Set((selectedValue as string[]) || []);
+        console.log('items: ', items);
+        return items.filter((item) => valueSets.has(item.value));
       }
       const foundItem = items.find((item) => item.value === selectedValue);
       return foundItem ? [foundItem] : [];

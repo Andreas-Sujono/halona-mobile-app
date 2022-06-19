@@ -1,14 +1,3 @@
-// import React from 'react';
-// import {
-//   SafeAreaView,
-//   ScrollView,
-//   StatusBar,
-//   StyleSheet,
-//   Text,
-//   useColorScheme,
-//   View,
-// } from 'react-native';
-
 import 'react-native-gesture-handler';
 import React from 'react';
 import { Provider } from 'react-redux';
@@ -20,6 +9,7 @@ import { ApplicationProvider } from '@ui-kitten/components';
 import Toast from 'react-native-toast-message';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { PopUpProvider } from 'components/PopUp';
+import { InternetConnectivityProvider } from 'Context/useInternetConnectivity';
 
 const queryClient = new QueryClient();
 
@@ -37,7 +27,9 @@ const App = () => (
       <ApplicationProvider {...eva} theme={eva.light}>
         <QueryClientProvider client={queryClient}>
           <PopUpProvider>
-            <ApplicationMainNavigator />
+            <InternetConnectivityProvider>
+              <ApplicationMainNavigator />
+            </InternetConnectivityProvider>
           </PopUpProvider>
         </QueryClientProvider>
       </ApplicationProvider>

@@ -1,3 +1,4 @@
+import { useWrappedMutation, validateAfterCall } from './../utils';
 import { selectUserId } from 'Store/Selector/auth';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useAppDispatch, useAppSelector } from './../../../Store/index';
@@ -23,7 +24,7 @@ export const useLogin = () => {
   const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
 
-  return useMutation(authService.login, {
+  return useWrappedMutation(authService.login, {
     onSuccess: (res: LoginResponse) => {
       if (res.accessToken) {
         //set token
@@ -41,7 +42,7 @@ export const useLogin = () => {
     onMutate: async (data: LoginRequest) => {
       /**Optimistic mutation */
     },
-    onError: (_err, data: LoginRequest, context) => {
+    onError: (_err: any, data: LoginRequest) => {
       Toast.show({
         type: 'error',
         text1: 'Error',
@@ -89,10 +90,6 @@ export const useMyAccountData = (onSuccess?: any, onError?: any) => {
   return useQuery<User>(QUERY_KEY.MY_ACCOUNT, authService.getMyAccount, {
     onSuccess,
     onError,
-    // select: data => {
-    //   const superHeroNames = data.data.map(hero => hero.name)
-    //   return superHeroNames
-    // }
   });
 };
 
@@ -101,18 +98,14 @@ export const useUpdateMyAccount = () => {
   const dispatch = useAppDispatch();
   const userId = useAppSelector(selectUserId);
 
-  return useMutation((data) => authService.updateAccount(data, userId), {
+  return useWrappedMutation((data: User) => authService.updateAccount(data, userId), {
     onSuccess: (res: any) => {
-      if (res.errorCode) {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: res.message,
-        });
+      if (!validateAfterCall(res, true, true, 'Success updating profile')) {
+        return;
       }
     },
 
-    onMutate: async (data: any) => {
+    onMutate: async (data: User) => {
       /**Optimistic mutation */
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries(QUERY_KEY.MY_ACCOUNT);
@@ -127,7 +120,7 @@ export const useUpdateMyAccount = () => {
       // Return a context with the previous and new todo
       return { previousData, newData: data };
     },
-    onError: (_err, data: any, context: any) => {
+    onError: (_err: any, data: any, context: any) => {
       //revert back updates
       queryClient.setQueryData(QUERY_KEY.MY_ACCOUNT, context.previousData);
       dispatch(setUser(context.previousData));

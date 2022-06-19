@@ -5,6 +5,7 @@
     - https://akveo.github.io/react-native-ui-kitten/docs/components/components-overview
 - react native vector icon
     - Note: this library needs additional setup, checkout the official documentation of how to setup on Ios, Android, and Web.
+    - for every npm run ios, you need to disable react-native config and run pod install
 - Redux, Redux persist, redux thunk --> to store offline data or to handle frontend multi screen interaction. It's not suggested to fetch API by calling action, use react query instead.
 - Axios
 - React query --> to handle API query, all caching is handled by this library. However, to enable the offline mode, all the data needs to be stored in the persisted redux store.
@@ -15,9 +16,12 @@
 
 features:
 - slider bottom drawer (DONE)
+- other notification popup (DONE)
 - infinite scrolling (DONE*)
 - auto update app, apk
-- offline cache data
+- offline cache data (DONE - save in redux persist)
+- check for no internet, cannot POST data
+- customized splash screen and app icon for both ios and android (auto update from server)
 
 
 Extras:

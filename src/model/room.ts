@@ -11,11 +11,11 @@ export enum BookingStatus {
   VOID = 'VOID',
   PENDING = 'PENDING',
   PAID = 'PAID',
+  PARTIAL_CHECKED_IN = 'PARTIAL_CHECKED_IN',
   CHECKED_IN_WITH_DEPOSIT = 'CHECKED_IN_WITH_DEPOSIT',
   CHECKED_OUT = 'CHECKED_OUT',
   CANCELLED_AND_MONEY_RETURNED = 'CANCELLED_AND_MONEY_RETURNED',
-  CANCELLED_AND_MONEY_HAS_NOT_RETURNED = 'CANCELLED_AND_MONEY_HAS_NOT_RETURNED',
-  CANCELLED = 'CANCELLED',
+  CANCELLED_AND_HAVENT_RETURN_MONEY = 'CANCELLED_AND_HAVENT_RETURN_MONEY',
 }
 
 export interface Room {
@@ -48,7 +48,7 @@ export interface Booking {
   status: BookingStatus;
   type: BookingType;
   onlineProviderName?: string;
-  onlineProviderId?: string;
+  onlineProviderOrderId?: string;
   guestName: string;
   guestPhoneNumber?: string;
   guestEmail?: string;
@@ -57,6 +57,6 @@ export interface Booking {
   bookingStartDate: Date;
   bookingEndDate: Date;
   guestNRIC?: string;
-  pendingPricePaid?: string;
+  pendingPricePaid?: number;
   description?: string;
 }

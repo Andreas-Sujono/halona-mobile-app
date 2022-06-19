@@ -5,11 +5,25 @@ import BaseService, { API_BASE_URL_PATH } from '../base';
 export default class BookingService extends BaseService {
   getAllRooms = async () => {
     const res = await this.getRequest('/rooms?join=currentBooking');
+    if (res?.data?.length) {
+      res.data.sort((a: Room, b: Room) =>
+        a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
+      );
+      res.data = res.data.map((item: Room, idx: number) => ({
+        ...item,
+        label: item.name,
+        value: item.id,
+        index: idx,
+      }));
+    }
     return res.data;
   };
 
-  getFloorPlan = async () => {
-    const res = await this.getRequest('/rooms/floor-plan');
+  getFloorPlan = async (date?: Date) => {
+    if (!date) {
+      date = new Date();
+    }
+    const res = await this.getRequest(`/rooms/floor-plan?date=${date}`);
     return res.data;
   };
 
@@ -31,6 +45,7 @@ export default class BookingService extends BaseService {
         index: idx,
       }));
     }
+    console.log('getAvailableRooms: ', res.data);
     return res.data;
   };
 
@@ -62,9 +77,10 @@ export default class BookingService extends BaseService {
   };
 
   createBooking = async (data: Booking) => {
-    console.log('create data: ', data);
-    const res = await this.postRequest('/bookings', data);
-    console.log('create book res: ', res);
+    const mappedData: any = data;
+    mappedData.rooms = data.rooms.map((item) => ({ id: item.id }));
+    delete mappedData.id;
+    const res = await this.postRequest('/bookings', mappedData);
     return res.data;
   };
 

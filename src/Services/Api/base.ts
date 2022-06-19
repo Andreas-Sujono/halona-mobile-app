@@ -78,9 +78,13 @@ export default class BaseService {
       }
       return parseObjectToCamelCase(response);
     } catch (err: any) {
-      return {
+      if (err.response.status === 401) {
+        // unauthorized
+        await clearToken();
+      }
+      throw {
         data: {
-          errorCode: err.response.status,
+          errorCode: err.response.status || 1,
           ...err.response.data,
         },
       };
@@ -96,9 +100,9 @@ export default class BaseService {
 
       return parseObjectToCamelCase(response);
     } catch (err: any) {
-      return {
+      throw {
         data: {
-          errorCode: err.response.status,
+          errorCode: err.response.status || 1,
           ...err.response.data,
         },
       };
@@ -113,9 +117,9 @@ export default class BaseService {
       const response: ApiResponse = await axios.patch(finalUrl, parsedData.data, parsedData.config);
       return parseObjectToCamelCase(response);
     } catch (err: any) {
-      return {
+      throw {
         data: {
-          errorCode: err.response.status,
+          errorCode: err.response.status || 1,
           ...err.response.data,
         },
       };
@@ -130,9 +134,9 @@ export default class BaseService {
       const response: ApiResponse = await axios.delete(finalUrl, parsedData.config);
       return parseObjectToCamelCase(response);
     } catch (err: any) {
-      return {
+      throw {
         data: {
-          errorCode: err.response.status,
+          errorCode: err.response.status || 1,
           ...err.response.data,
         },
       };

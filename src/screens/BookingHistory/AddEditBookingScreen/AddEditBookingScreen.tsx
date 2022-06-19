@@ -10,7 +10,7 @@ import {
   useDeleteBooking,
   useUpdateBooking,
 } from 'hooks/api/booking/useBookingData';
-import { useAvailableRoomsData } from 'hooks/api/booking/useRoomData';
+import { useAllRoomsData, useAvailableRoomsData } from 'hooks/api/booking/useRoomData';
 import { useQueryClient } from 'react-query';
 import { QUERY_KEY } from 'hooks/api/queryKeys';
 import Toast from 'react-native-toast-message';
@@ -18,6 +18,7 @@ import moment from 'moment';
 import { formatCurrency } from 'utils';
 import { navigate } from 'navigators/utils';
 import { PopUp } from 'components/PopUp';
+import BookingSummary from './BookingSummary';
 
 const bookingStatusData = [
   {
@@ -36,31 +37,25 @@ const bookingStatusData = [
     index: 2,
   },
 
-  //must handle separately
   {
     label: 'Paid & Checked In with deposit',
     value: BookingStatus.CHECKED_IN_WITH_DEPOSIT,
-    index: 4,
+    index: 3,
   },
   {
     label: 'Checked Out',
     value: BookingStatus.CHECKED_OUT,
-    index: 5,
-  },
-  {
-    label: 'Cancelled',
-    value: BookingStatus.CANCELLED,
-    index: 3,
+    index: 4,
   },
   {
     label: 'Cancelled and money has not returned',
-    value: BookingStatus.CANCELLED_AND_MONEY_HAS_NOT_RETURNED,
-    index: 3,
+    value: BookingStatus.CANCELLED_AND_HAVENT_RETURN_MONEY,
+    index: 5,
   },
   {
     label: 'Cancelled and money returned',
     value: BookingStatus.CANCELLED_AND_MONEY_RETURNED,
-    index: 4,
+    index: 6,
   },
 ];
 const bookingTypeData = [
@@ -83,14 +78,19 @@ const bookingTypeData = [
 function AddEditBookingScreen({ route }: any) {
   const isEditMode = route?.params?.isEditMode;
   const [bookingData, setBookingData] = useState<Booking>(
-    route.params?.bookingData || {
-      id: '',
-      guestName: '',
-      rooms: [],
-      price: 180000,
-      status: BookingStatus.VOID,
-      type: BookingType.ONLINE,
-    }
+    route.params?.bookingData
+      ? {
+          ...route.params?.bookingData,
+          rooms: route.params?.bookingData?.rooms || [],
+        }
+      : {
+          id: '',
+          guestName: '',
+          rooms: [],
+          price: 180000,
+          status: BookingStatus.VOID,
+          type: BookingType.ONLINE,
+        }
   );
   const [showConfirmationPage, setShowConfirmationPage] = useState(false);
   const { mutate: updateBooking, isLoading: isUpdateLoading } = useUpdateBooking(bookingData?.id);
@@ -99,7 +99,8 @@ function AddEditBookingScreen({ route }: any) {
 
   const queryClient = useQueryClient();
   const { data } = useBookingData(bookingData.id);
-  const { data: availableRooms } = useAvailableRoomsData();
+  const { data: availableRooms } = useAllRoomsData();
+  console.log('availableRooms: ', availableRooms);
 
   useEffect(() => {
     queryClient.invalidateQueries(QUERY_KEY.AVAIL_ROOMS);
@@ -174,6 +175,9 @@ function AddEditBookingScreen({ route }: any) {
     setShowConfirmationPage(false);
     navigate('BottomTabs', {
       screen: 'BookingHistoryStack',
+      params: {
+        screen: 'BookingHistoryHome',
+      },
     });
   };
 
@@ -198,74 +202,15 @@ function AddEditBookingScreen({ route }: any) {
 
   if (showConfirmationPage) {
     return (
-      <ScrollView style={styles.Container}>
-        <Text category="h6" style={{ marginBottom: 18 }}>
-          Confirmation Page:
-        </Text>
-        <Text style={styles.confirmationInputLabel}>
-          Guest Name: <Text style={styles.confirmationInputValue}>{bookingData.guestName}</Text>
-        </Text>
-        <Text style={styles.confirmationInputLabel}>
-          Guest Email: <Text style={styles.confirmationInputValue}>{bookingData.guestEmail}</Text>
-        </Text>
-        <Text style={styles.confirmationInputLabel}>
-          Guest Phone Number:{' '}
-          <Text style={styles.confirmationInputValue}>{bookingData.guestPhoneNumber}</Text>
-        </Text>
-        <Text style={styles.confirmationInputLabel}>
-          Guest NRIC: <Text style={styles.confirmationInputValue}>{bookingData.status}</Text>
-        </Text>
-        <Text style={styles.confirmationInputLabel}>
-          Rooms:{' '}
-          <Text style={styles.confirmationInputValue}>
-            {bookingData.rooms.map((item) => item.name).join(', ')}
-          </Text>
-        </Text>
-
-        <Text style={styles.confirmationInputLabel}>
-          Booking Status: <Text style={styles.confirmationInputValue}>{bookingData.status}</Text>
-        </Text>
-        <Text style={styles.confirmationInputLabel}>
-          Booking Type: <Text style={styles.confirmationInputValue}>{bookingData.type}</Text>
-        </Text>
-        <Text style={styles.confirmationInputLabel}>
-          Booking start date:{' '}
-          <Text style={styles.confirmationInputValue}>
-            {new Date(bookingData.bookingStartDate).toLocaleDateString()}
-          </Text>
-        </Text>
-        <Text style={styles.confirmationInputLabel}>
-          Booking End Date:{' '}
-          <Text style={styles.confirmationInputValue}>
-            {new Date(bookingData.bookingEndDate).toLocaleDateString()}
-          </Text>
-        </Text>
-        <Text style={styles.confirmationInputLabel}>
-          Total Price:{' '}
-          <Text style={styles.confirmationInputValue}>{formatCurrency(bookingData.price)}</Text>
-        </Text>
-        <Button
-          style={{
-            marginTop: 16,
-          }}
-          onPress={() => setShowConfirmationPage(false)}
-          appearance="outline"
-        >
-          Cancel
-        </Button>
-        <Button
-          style={{
-            marginTop: 16,
-            marginBottom: 52,
-          }}
-          onPress={onCreate}
-        >
-          Confirm & Add
-        </Button>
-      </ScrollView>
+      <BookingSummary
+        bookingData={bookingData}
+        onCancel={() => setShowConfirmationPage(false)}
+        onCreate={onCreate}
+      />
     );
   }
 
+  const chosenRoomIds = bookingData.rooms.map((item) => item.id);
   return (
     <ScrollView style={styles.Container}>
       <Select
@@ -273,14 +218,14 @@ function AddEditBookingScreen({ route }: any) {
         items={availableRooms || []}
         onChangeValue={(values) => updateBookingdata('rooms', values)}
         style={styles.input}
-        selectedItem={bookingData.rooms as any}
+        selectedValue={chosenRoomIds}
         isMultiple
         placeholder="select room numbers"
       />
 
       <Select
         label="Booking Status"
-        items={isEditMode ? bookingStatusData : bookingStatusData.slice(0, 3)}
+        items={isEditMode ? bookingStatusData : bookingStatusData.slice(0, 4)}
         onChangeValue={(value: any) => updateBookingdata('status', value.value)}
         style={styles.input}
         selectedValue={bookingData.status as any}
@@ -305,10 +250,10 @@ function AddEditBookingScreen({ route }: any) {
             style={styles.input}
           />
           <Input
-            value={bookingData.onlineProviderId}
+            value={bookingData.onlineProviderOrderId}
             label="Online Provider Id"
             placeholder="Place your Text"
-            onChangeText={(value: any) => updateBookingdata('onlineProviderId', value)}
+            onChangeText={(value: any) => updateBookingdata('onlineProviderOrderId', value)}
             style={styles.input}
           />
         </>
@@ -378,7 +323,7 @@ function AddEditBookingScreen({ route }: any) {
         style={styles.input}
       />
       <Input
-        value={bookingData.pendingPricePaid}
+        value={bookingData.pendingPricePaid?.toString()}
         label="Pending price paid"
         placeholder="Place your Text"
         onChangeText={(value: any) => updateBookingdata('pendingPricePaid', value)}

@@ -13,6 +13,13 @@ function UpdateProfileScreen() {
     phoneNumber: '',
   });
 
+  const updateProfileData = (key: keyof typeof profileData, value: any) => {
+    setProfileData({
+      ...profileData,
+      [key]: value,
+    });
+  };
+
   useEffect(() => {
     if (data) {
       setProfileData(data);
@@ -20,7 +27,7 @@ function UpdateProfileScreen() {
   }, [data]);
 
   const onUpdate = async () => {
-    await updateAccount(profileData);
+    updateAccount(profileData);
   };
 
   return (
@@ -29,7 +36,7 @@ function UpdateProfileScreen() {
         value={profileData?.fullName}
         label="Full Name*"
         placeholder="Input your full name"
-        onChangeText={(nextValue) => console.log(nextValue)}
+        onChangeText={(nextValue) => updateProfileData('fullName', nextValue)}
         style={styles.input}
       />
 
@@ -37,14 +44,14 @@ function UpdateProfileScreen() {
         value={profileData?.email}
         label="Email"
         placeholder="Input your email"
-        onChangeText={(nextValue) => console.log(nextValue)}
+        onChangeText={(nextValue) => updateProfileData('email', nextValue)}
         style={styles.input}
       />
       <Input
         value={profileData?.phoneNumber}
         label="Phone Number"
         placeholder="Input your phone number"
-        onChangeText={(nextValue) => console.log(nextValue)}
+        onChangeText={(nextValue) => updateProfileData('phoneNumber', nextValue)}
         style={styles.input}
       />
 

@@ -1,75 +1,80 @@
+import { useWrappedMutation } from './../utils';
+import { setFloorPlan, setRoomSummary } from './../../../Store/Actions/booking/general/general';
+import {
+  selectAllRooms,
+  selectFloorPlan,
+  selectRoomSummary,
+} from './../../../Store/Selector/booking/general';
+import { InternetConnectivityContext } from 'Context/useInternetConnectivity';
 import { Id } from 'model';
-import Toast from 'react-native-toast-message';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useContext } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
 import { bookingService } from 'Services/Api/booking/general';
+import { useAppDispatch, useAppSelector } from 'Store';
 import { QUERY_KEY } from '../queryKeys';
+import { handleCallFailure, validateAfterCall } from '../utils';
+import { setAllRooms } from 'Store/Actions/booking/general';
 
-export const useAllRoomsData = (onSuccess?: any, onError?: any) => {
+export const useAllRoomsData = () => {
+  const dispatch = useAppDispatch();
+  const { isConnected } = useContext(InternetConnectivityContext);
+  const initialData: any = useAppSelector(selectAllRooms);
+  console.log('initialData: ', initialData);
   return useQuery(QUERY_KEY.ROOMS, bookingService.getAllRooms, {
     onSuccess: (res: any) => {
-      if (res.errorCode !== 0 && res.errorCode !== 200) {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: res.message,
-        });
+      console.log('res: ', res);
+      if (!validateAfterCall(res)) {
+        // throw error message
+        return;
       }
+      dispatch(setAllRooms(res)); //save to cache
     },
-    onError,
-    // select: data => {
-    //   const superHeroNames = data.data.map(hero => hero.name)
-    //   return superHeroNames
-    // }
+    onError: (res: any) => {
+      handleCallFailure(res.message);
+    },
+    enabled: isConnected, //only call when there's internet
+    initialData, //use cached or default data
   });
 };
 
-export const useFloorPlanData = (onSuccess?: any, onError?: any) => {
-  return useQuery(QUERY_KEY.ROOMS_FLOOR_PLAN, bookingService.getFloorPlan, {
-    onSuccess: (res: any) => {
-      if (res.errorCode) {
-        console.log('error happens: ', res);
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: res.message,
-        });
-      }
-    },
-    onError,
-    // select: data => {
-    //   const superHeroNames = data.data.map(hero => hero.name)
-    //   return superHeroNames
-    // }
-    initialData: [
-      {
-        id: 1,
-        floorName: 'Lv1',
-        rooms: [],
+export const useFloorPlanData = () => {
+  const dispatch = useAppDispatch();
+  const { isConnected } = useContext(InternetConnectivityContext);
+  const initialData = useAppSelector(selectFloorPlan);
+
+  return useQuery(
+    QUERY_KEY.ROOMS_FLOOR_PLAN,
+    (data: any = {}) => bookingService.getFloorPlan(data?.date),
+    {
+      onSuccess: (res: any) => {
+        if (!validateAfterCall(res)) {
+          return;
+        }
+        dispatch(setFloorPlan(res)); //save to cache
       },
-    ],
-  });
+      onError: (res: any) => {
+        handleCallFailure(res.message);
+      },
+      enabled: isConnected, //only call when there's internet
+      initialData, //use cached or default data
+    }
+  );
 };
 
-export const useRoomData = (roomId: Id, onSuccess?: any, onError?: any) => {
+export const useRoomData = (roomId: Id) => {
+  const { isConnected } = useContext(InternetConnectivityContext);
+
   return useQuery(
     [QUERY_KEY.ROOM, roomId],
     (context) => bookingService.getOneRoom(context.queryKey[1]),
     {
       onSuccess: (res: any) => {
-        if (res.errorCode !== 0 && res.errorCode !== 200) {
-          console.log('error happens: ', res);
-          Toast.show({
-            type: 'error',
-            text1: 'Error',
-            text2: res.message,
-          });
+        if (!validateAfterCall(res)) {
+          return;
         }
       },
-      onError,
-      // select: data => {
-      //   const superHeroNames = data.data.map(hero => hero.name)
-      //   return superHeroNames
-      // }
+      enabled: isConnected, //only call when there's internet
+      initialData: {},
     }
   );
 };
@@ -77,21 +82,10 @@ export const useRoomData = (roomId: Id, onSuccess?: any, onError?: any) => {
 export const useUpdateRoom = (roomId: Id) => {
   const queryClient = useQueryClient();
 
-  return useMutation((data) => bookingService.updateRoom(roomId, data), {
+  return useWrappedMutation((data: any) => bookingService.updateRoom(roomId, data), {
     onSuccess: (res: any) => {
-      if (res.error || res.errorCode) {
-        console.log('error happens: ', res);
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: res.message,
-        });
-      } else {
-        Toast.show({
-          type: 'success',
-          text1: 'Success',
-          text2: 'You have successfully update room details',
-        });
+      if (!validateAfterCall(res, true, true, 'You have successfully update room details')) {
+        return;
       }
     },
 
@@ -102,14 +96,10 @@ export const useUpdateRoom = (roomId: Id) => {
       queryClient.setQueryData([QUERY_KEY.ROOM, roomId], { ...previousData, ...data });
       return { previousData, newData: data };
     },
-    onError: (_err, data: any, context: any) => {
+    onError: (_err: any, data: any, context: any) => {
       //revert back updates
       queryClient.setQueryData([QUERY_KEY.ROOM, roomId], context.previousData);
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Please try again!',
-      });
+      handleCallFailure(_err.message);
     },
     onSettled: () => {
       //after login, refetch get my account
@@ -120,9 +110,44 @@ export const useUpdateRoom = (roomId: Id) => {
 };
 
 export const useRoomSummaryData = () => {
-  return useQuery(QUERY_KEY.ROOM_SUMMARY, bookingService.getRoomSummary);
+  const dispatch = useAppDispatch();
+  const { isConnected } = useContext(InternetConnectivityContext);
+  const initialData = useAppSelector(selectRoomSummary);
+
+  return useQuery(QUERY_KEY.ROOM_SUMMARY, bookingService.getRoomSummary, {
+    onSuccess: (res: any) => {
+      if (!validateAfterCall(res)) {
+        // throw error message
+        return;
+      }
+      dispatch(setRoomSummary(res)); //save to cache
+    },
+    onError: (res: any) => {
+      handleCallFailure(res.message);
+    },
+    enabled: isConnected, //only call when there's internet
+    initialData, //use cached or default data
+  });
 };
 
-export const useAvailableRoomsData = () => {
-  return useQuery(QUERY_KEY.AVAIL_ROOMS, bookingService.getAvailableRooms);
+export const useAvailableRoomsData = (isEditMode = false) => {
+  const { isConnected } = useContext(InternetConnectivityContext);
+
+  return useQuery(
+    QUERY_KEY.AVAIL_ROOMS,
+    !isEditMode ? bookingService.getAvailableRooms : bookingService.getAllRooms,
+    {
+      onSuccess: (res: any) => {
+        if (!validateAfterCall(res)) {
+          // throw error message
+          return;
+        }
+      },
+      onError: (res: any) => {
+        handleCallFailure(res.message);
+      },
+      initialData: [],
+      enabled: isConnected, //only call when there's internet
+    }
+  );
 };

@@ -11,7 +11,10 @@ import {
   REGISTER,
 } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import auth from './Reducers/auth';
+import booking from './Reducers/booking';
+import finance from './Reducers/finance';
 
 //we use redux store to store offline data, to fetch api, we use react query instead
 
@@ -23,13 +26,16 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   whitelist: ['auth'],
+  stateReconciler: autoMergeLevel2,
 };
 
 const rootReducer = combineReducers({
   auth,
+  booking,
+  finance,
 });
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistReducer<RootState>(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: persistedReducer,

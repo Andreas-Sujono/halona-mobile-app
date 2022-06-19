@@ -65,7 +65,7 @@ function BookingHistoryScreen() {
     setRefreshing(false);
   }, [queryClient]);
 
-  const allData = data?.pages.reduce((acc, curr) => [...acc, ...curr.data], []);
+  const allData = data?.pages?.reduce((acc, curr) => [...acc, ...curr.data], []) || [];
 
   return (
     <View style={styles.container}>

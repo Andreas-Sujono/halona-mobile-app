@@ -37,10 +37,10 @@ export const mapStatusToInfo = {
 
 function FloorPlan() {
   const { data: allRooms, isLoading } = useFloorPlanData();
-
   const [currentFloorId, setCurrentFloorId] = useState(0);
 
   const chosenRooms = allRooms?.find((item: any) => item.id === currentFloorId)?.rooms || [];
+
   const roomDetailDrawerContext = useContext(RoomDetailDrawerContext);
 
   // console.log('allRooms: ', allRooms);

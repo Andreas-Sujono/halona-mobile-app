@@ -1,52 +1,56 @@
+import { selectAllBookings } from './../../../Store/Selector/booking/general';
+import { InternetConnectivityContext } from 'Context/useInternetConnectivity';
+import { setAllBookings } from './../../../Store/Actions/booking/general/general';
+import { useAppDispatch, useAppSelector } from './../../../Store/index';
 import { Id } from 'model';
-import Toast from 'react-native-toast-message';
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from 'react-query';
+import { useInfiniteQuery, useQuery, useQueryClient } from 'react-query';
 import { bookingService } from 'Services/Api/booking/general';
 import { QUERY_KEY } from '../queryKeys';
+import { handleCallFailure, useWrappedMutation, validateAfterCall } from '../utils';
+import { useContext } from 'react';
 
-export const useAllBookingsData = (onSuccess?: any, onError?: any) => {
+export const useAllBookingsData = () => {
+  const dispatch = useAppDispatch();
+  const { isConnected } = useContext(InternetConnectivityContext);
+  const initialData = useAppSelector(selectAllBookings);
+
   return useInfiniteQuery(
     QUERY_KEY.BOOKINGS,
     ({ pageParam = 0 }) => bookingService.getAllBookings(pageParam || 1),
     {
-      getNextPageParam: (lastPage) => (lastPage.hasNextPage ? lastPage.page + 1 : undefined),
+      getNextPageParam: (lastPage) => (lastPage?.hasNextPage ? lastPage.page + 1 : undefined),
       onSuccess: (res: any) => {
-        if (res.errorCode) {
-          Toast.show({
-            type: 'error',
-            text1: 'Error',
-            text2: res.message,
-          });
+        if (!validateAfterCall(res)) {
+          // throw error message
+          return;
         }
+        dispatch(setAllBookings(res)); //save to cache
       },
-      onError,
-      // select: data => {
-      //   const superHeroNames = data.data.map(hero => hero.name)
-      //   return superHeroNames
-      // }
+      onError: (res: any) => {
+        handleCallFailure(res.message);
+      },
+      enabled: isConnected, //only call when there's internet
+      initialData, //use cached or default data
     }
   );
 };
 
-export const useBookingData = (bookingId: Id, onSuccess?: any, onError?: any) => {
+export const useBookingData = (bookingId: Id) => {
+  const { isConnected } = useContext(InternetConnectivityContext);
   return useQuery(
     [QUERY_KEY.BOOKING, bookingId],
     (context) => bookingService.getOneBooking(context.queryKey[1]),
     {
       onSuccess: (res: any) => {
-        if (res.errorCode) {
-          Toast.show({
-            type: 'error',
-            text1: 'Error',
-            text2: res.message,
-          });
+        if (!validateAfterCall(res)) {
+          return;
         }
       },
-      onError,
-      // select: data => {
-      //   const superHeroNames = data.data.map(hero => hero.name)
-      //   return superHeroNames
-      // }
+      onError: (res: any) => {
+        handleCallFailure(res.message);
+      },
+      enabled: isConnected, //only call when there's internet
+      initialData: null,
     }
   );
 };
@@ -54,37 +58,22 @@ export const useBookingData = (bookingId: Id, onSuccess?: any, onError?: any) =>
 export const useCreateBooking = () => {
   const queryClient = useQueryClient();
 
-  return useMutation((data) => bookingService.createBooking(data), {
+  return useWrappedMutation((data: any) => bookingService.createBooking(data), {
     onSuccess: (res: any) => {
-      if (res.errorCode) {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: res.message,
-        });
-      } else {
-        Toast.show({
-          type: 'success',
-          text1: 'Success',
-          text2: 'Success updating booking',
-        });
+      if (!validateAfterCall(res, true, true, 'Success creating booking')) {
+        return;
       }
     },
 
-    onMutate: async (data: any) => {
+    onMutate: async () => {
       await queryClient.cancelQueries(QUERY_KEY.BOOKINGS);
       const previousData: any = queryClient.getQueryData(QUERY_KEY.BOOKINGS);
       return { previousData };
     },
-    onError: (_err, data: any, context: any) => {
+    onError: (_err: any, data: any, context: any) => {
       //revert back updates
       queryClient.setQueryData(QUERY_KEY.BOOKINGS, context.previousData);
-
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Please try again!',
-      });
+      handleCallFailure(_err.message);
     },
     onSettled: () => {
       //after login, refetch get my account
@@ -96,20 +85,10 @@ export const useCreateBooking = () => {
 export const useUpdateBooking = (bookingId: Id) => {
   const queryClient = useQueryClient();
 
-  return useMutation((data) => bookingService.updateBooking(bookingId, data), {
+  return useWrappedMutation((data: any) => bookingService.updateBooking(bookingId, data), {
     onSuccess: (res: any) => {
-      if (res.errorCode) {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: res.message,
-        });
-      } else {
-        Toast.show({
-          type: 'success',
-          text1: 'Success',
-          text2: 'Success creating booking',
-        });
+      if (!validateAfterCall(res, true, true, 'Success updating booking')) {
+        return;
       }
     },
 
@@ -120,16 +99,11 @@ export const useUpdateBooking = (bookingId: Id) => {
       queryClient.setQueryData([QUERY_KEY.BOOKING, bookingId], { ...previousData, ...data });
       return { previousData, newData: data };
     },
-    onError: (_err, data: any, context: any) => {
+    onError: (_err: any, data: any, context: any) => {
       //revert back updates
       queryClient.setQueryData([QUERY_KEY.BOOKING, bookingId], context.previousData);
       queryClient.invalidateQueries(QUERY_KEY.BOOKINGS);
-
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Please try again!',
-      });
+      handleCallFailure(_err.message);
     },
     onSettled: () => {
       //after login, refetch get my account
@@ -142,20 +116,10 @@ export const useUpdateBooking = (bookingId: Id) => {
 export const useDeleteBooking = (bookingId: Id) => {
   const queryClient = useQueryClient();
 
-  return useMutation(() => bookingService.deleteBooking(bookingId), {
+  return useWrappedMutation(() => bookingService.deleteBooking(bookingId), {
     onSuccess: (res: any) => {
-      if (res.errorCode) {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: res.message,
-        });
-      } else {
-        Toast.show({
-          type: 'success',
-          text1: 'Success',
-          text2: 'Success deleting booking',
-        });
+      if (!validateAfterCall(res, true, true, 'Success deleting booking')) {
+        return;
       }
     },
 
@@ -173,15 +137,10 @@ export const useDeleteBooking = (bookingId: Id) => {
 
       return { previousData: previousBookings };
     },
-    onError: (_err, data: any, context: any) => {
+    onError: (_err: any, data: any, context: any) => {
       //revert back updates
       queryClient.setQueryData(QUERY_KEY.BOOKINGS, context.previousData);
-
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Please try again!',
-      });
+      handleCallFailure(_err.message);
     },
     onSettled: () => {
       //after login, refetch get my account
@@ -193,7 +152,7 @@ export const useDeleteBooking = (bookingId: Id) => {
 export const useCheckInBooking = (bookingIdInitial: Id) => {
   const queryClient = useQueryClient();
 
-  return useMutation(
+  return useWrappedMutation(
     (data: { bookingId: Id }) => bookingService.checkInBooking(data.bookingId || bookingIdInitial),
     {
       // onSuccess: (res: any) => {
@@ -209,15 +168,10 @@ export const useCheckInBooking = (bookingIdInitial: Id) => {
         });
         return { previousData, newData: data };
       },
-      onError: (_err, data: any, context: any) => {
+      onError: (_err: any, data: any, context: any) => {
         //revert back updates
         queryClient.setQueryData([QUERY_KEY.BOOKING, bookingIdInitial], context.previousData);
-
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Please try again!',
-        });
+        handleCallFailure(_err.message);
       },
       onSettled: () => {
         //after login, refetch get data
@@ -230,7 +184,7 @@ export const useCheckInBooking = (bookingIdInitial: Id) => {
 export const useCheckOutBooking = (bookingIdInitial: Id) => {
   const queryClient = useQueryClient();
 
-  return useMutation(
+  return useWrappedMutation(
     (data: { bookingId: Id }) => bookingService.checkOutBooking(data.bookingId || bookingIdInitial),
     {
       // onSuccess: (res: any) => {
@@ -246,15 +200,10 @@ export const useCheckOutBooking = (bookingIdInitial: Id) => {
         });
         return { previousData, newData: data };
       },
-      onError: (_err, data: any, context: any) => {
+      onError: (_err: any, data: any, context: any) => {
         //revert back updates
         queryClient.setQueryData([QUERY_KEY.BOOKING, bookingIdInitial], context.previousData);
-
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'Please try again!',
-        });
+        handleCallFailure(_err.message);
       },
       onSettled: () => {
         //after login, refetch get data
