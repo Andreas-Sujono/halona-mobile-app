@@ -27,13 +27,19 @@ export default class BookingService extends BaseService {
     return res.data;
   };
 
-  getRoomSummary = async () => {
-    const res = await this.getRequest('/rooms/summary');
+  getRoomSummary = async (date?: Date) => {
+    if (!date) {
+      date = new Date();
+    }
+    const res = await this.getRequest(`/rooms/summary?date=${date}`);
     return res.data;
   };
 
-  getAvailableRooms = async () => {
-    const res = await this.getRequest('/rooms/available');
+  getAvailableRooms = async (date?: Date) => {
+    if (!date) {
+      date = new Date();
+    }
+    const res = await this.getRequest(`/rooms/available?date=${date}`);
     if (res?.data?.length) {
       res.data.sort((a: Room, b: Room) =>
         a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
@@ -45,7 +51,6 @@ export default class BookingService extends BaseService {
         index: idx,
       }));
     }
-    console.log('getAvailableRooms: ', res.data);
     return res.data;
   };
 
@@ -85,9 +90,7 @@ export default class BookingService extends BaseService {
   };
 
   updateBooking = async (bookingId: Id, data: Room) => {
-    console.log(bookingId, data);
     const res = await this.patchRequest(`/bookings/${bookingId}`, data);
-    console.log('update book res: ', res);
     return res.data;
   };
 

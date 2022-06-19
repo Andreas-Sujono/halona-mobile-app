@@ -21,6 +21,8 @@ export const setAllRooms = (value: any) => set('allRooms', value);
 export const setFloorPlan = (value: any) => set('floorPlan', value);
 export const setAllBookings = (value: any) => set('allBookings', value);
 export const setRoomSummary = (value: any) => set('roomSummary', value);
+export const setMainBookingDateView = (value: any) => set('mainBookingDateView', value);
+export const setUseFloorPlanView = (value: any) => set('useFloorPlanView', value);
 
 export const reset = () => ({
   type: ActionTypes.RESET,

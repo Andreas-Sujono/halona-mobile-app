@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const formatDateTime = (timestamp: number, timezone = '') => {
   if (timezone) {
     return new Date(timestamp).toLocaleString();
@@ -25,5 +27,15 @@ export const getCurrentMonth = () => {
 };
 
 export const formatCurrency = (number: number) => {
+  if (!number) {
+    number = 0;
+  }
   return number.toLocaleString('en-us', { style: 'currency', currency: 'IDR' }).slice(0, -3);
+};
+
+export const formatDate = (date?: Date | string) => {
+  if (!date) {
+    return '';
+  }
+  return moment(date).format('DD/MMM/yyyy');
 };

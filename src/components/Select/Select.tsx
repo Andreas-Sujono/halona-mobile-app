@@ -61,7 +61,6 @@ function CustomSelect({
     } else if (selectedValue) {
       if (isMultiple) {
         const valueSets = new Set((selectedValue as string[]) || []);
-        console.log('items: ', items);
         return items.filter((item) => valueSets.has(item.value));
       }
       const foundItem = items.find((item) => item.value === selectedValue);

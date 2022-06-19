@@ -15,17 +15,16 @@
 
 
 features:
-- slider bottom drawer (DONE)
-- other notification popup (DONE)
-- infinite scrolling (DONE*)
+- v - slider bottom drawer (DONE)
+- v - other notification popup (DONE)
+- v - infinite scrolling (DONE*)
+- v - offline cache data (DONE - save in redux persist)
+- v - check for no internet, cannot POST data (DONE - create mutation wrapper + query structure)
 - auto update app, apk
-- offline cache data (DONE - save in redux persist)
-- check for no internet, cannot POST data
 - customized splash screen and app icon for both ios and android (auto update from server)
 
 
 Extras:
-- offline --> can read from cache, but cannot post data to server. send notif if no internet, error
 - setup eslint & prettier
 - run testing
 - run debugger --> so we can see the component tree and inside redux store (react native debugger application)
@@ -39,6 +38,7 @@ Extras:
 - splash screen: https://blog.logrocket.com/building-a-splash-screen-in-react-native/
 - auto update, auto update splash screen, icon
 - change app icon: https://aboutreact.com/react-native-change-app-icon/
+- connect to bluetooth - ex: to print
 
 
 Next:

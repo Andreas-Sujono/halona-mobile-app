@@ -27,7 +27,6 @@ function Notifications() {
 const styles = StyleSheet.create({
   container: {
     width: '90%',
-    maxHeight: 200,
     background: 'white',
     shadowColor: 'grey',
     shadowOffset: { width: 1, height: 1 },
@@ -37,6 +36,7 @@ const styles = StyleSheet.create({
     margin: 16,
     marginTop: 16,
     flexDirection: 'row',
+    // marginBottom: 200,
   },
   card: {
     flex: 1,

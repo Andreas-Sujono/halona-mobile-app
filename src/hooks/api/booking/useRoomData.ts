@@ -3,6 +3,7 @@ import { setFloorPlan, setRoomSummary } from './../../../Store/Actions/booking/g
 import {
   selectAllRooms,
   selectFloorPlan,
+  selectMainBookingDateView,
   selectRoomSummary,
 } from './../../../Store/Selector/booking/general';
 import { InternetConnectivityContext } from 'Context/useInternetConnectivity';
@@ -19,10 +20,9 @@ export const useAllRoomsData = () => {
   const dispatch = useAppDispatch();
   const { isConnected } = useContext(InternetConnectivityContext);
   const initialData: any = useAppSelector(selectAllRooms);
-  console.log('initialData: ', initialData);
+
   return useQuery(QUERY_KEY.ROOMS, bookingService.getAllRooms, {
     onSuccess: (res: any) => {
-      console.log('res: ', res);
       if (!validateAfterCall(res)) {
         // throw error message
         return;
@@ -41,10 +41,11 @@ export const useFloorPlanData = () => {
   const dispatch = useAppDispatch();
   const { isConnected } = useContext(InternetConnectivityContext);
   const initialData = useAppSelector(selectFloorPlan);
+  const mainDateView = useAppSelector(selectMainBookingDateView);
 
   return useQuery(
-    QUERY_KEY.ROOMS_FLOOR_PLAN,
-    (data: any = {}) => bookingService.getFloorPlan(data?.date),
+    [QUERY_KEY.ROOMS_FLOOR_PLAN, mainDateView],
+    ({ queryKey }) => bookingService.getFloorPlan(queryKey[1]),
     {
       onSuccess: (res: any) => {
         if (!validateAfterCall(res)) {
@@ -113,21 +114,26 @@ export const useRoomSummaryData = () => {
   const dispatch = useAppDispatch();
   const { isConnected } = useContext(InternetConnectivityContext);
   const initialData = useAppSelector(selectRoomSummary);
+  const mainDateView = useAppSelector(selectMainBookingDateView);
 
-  return useQuery(QUERY_KEY.ROOM_SUMMARY, bookingService.getRoomSummary, {
-    onSuccess: (res: any) => {
-      if (!validateAfterCall(res)) {
-        // throw error message
-        return;
-      }
-      dispatch(setRoomSummary(res)); //save to cache
-    },
-    onError: (res: any) => {
-      handleCallFailure(res.message);
-    },
-    enabled: isConnected, //only call when there's internet
-    initialData, //use cached or default data
-  });
+  return useQuery(
+    [QUERY_KEY.ROOM_SUMMARY, mainDateView],
+    ({ queryKey }) => bookingService.getRoomSummary(queryKey[1]),
+    {
+      onSuccess: (res: any) => {
+        if (!validateAfterCall(res)) {
+          // throw error message
+          return;
+        }
+        dispatch(setRoomSummary(res)); //save to cache
+      },
+      onError: (res: any) => {
+        handleCallFailure(res.message);
+      },
+      enabled: isConnected, //only call when there's internet
+      initialData, //use cached or default data
+    }
+  );
 };
 
 export const useAvailableRoomsData = (isEditMode = false) => {
@@ -135,7 +141,7 @@ export const useAvailableRoomsData = (isEditMode = false) => {
 
   return useQuery(
     QUERY_KEY.AVAIL_ROOMS,
-    !isEditMode ? bookingService.getAvailableRooms : bookingService.getAllRooms,
+    !isEditMode ? () => bookingService.getAvailableRooms() : () => bookingService.getAllRooms(),
     {
       onSuccess: (res: any) => {
         if (!validateAfterCall(res)) {

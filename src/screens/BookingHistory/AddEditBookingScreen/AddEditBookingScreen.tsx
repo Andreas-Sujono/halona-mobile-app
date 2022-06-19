@@ -100,7 +100,6 @@ function AddEditBookingScreen({ route }: any) {
   const queryClient = useQueryClient();
   const { data } = useBookingData(bookingData.id);
   const { data: availableRooms } = useAllRoomsData();
-  console.log('availableRooms: ', availableRooms);
 
   useEffect(() => {
     queryClient.invalidateQueries(QUERY_KEY.AVAIL_ROOMS);

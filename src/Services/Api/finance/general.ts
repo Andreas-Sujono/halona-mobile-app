@@ -3,7 +3,7 @@ import BaseService, { API_BASE_URL_PATH } from '../base';
 
 export default class FinanceService extends BaseService {
   getFinanceSummaryThisMonth = async () => {
-    const res = await this.getRequest('/finance-records/this-month');
+    const res = await this.getRequest('/finance-records/until-date');
     return res.data;
   };
 

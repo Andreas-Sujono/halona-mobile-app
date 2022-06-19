@@ -108,6 +108,11 @@ function RoomDetailBottomDrawer({ room, onClose }: { room: Room; onClose: () => 
     }
   };
 
+  const currentBooking =
+    room.currentBooking && Object.keys(room.currentBooking).length > 0
+      ? room.currentBooking
+      : (room as any)?.activeBookings?.[0] || null;
+
   return (
     <BottomDrawer onDrawerStateChange={onDrawerStateChange}>
       <View>
@@ -172,9 +177,9 @@ function RoomDetailBottomDrawer({ room, onClose }: { room: Room; onClose: () => 
           <Text category="h6" style={{ marginBottom: 12 }}>
             Current Booking
           </Text>
-          {!!room?.currentBooking && (
+          {!!currentBooking && (
             <>
-              <BookingCard booking={room.currentBooking} />
+              <BookingCard booking={currentBooking} />
               <Button
                 style={{
                   marginTop: 12,
@@ -203,7 +208,7 @@ function RoomDetailBottomDrawer({ room, onClose }: { room: Room; onClose: () => 
               </Button> */}
             </>
           )}
-          {!room?.currentBooking && (
+          {!currentBooking && (
             <>
               <Text style={{ color: 'grey' }}>No Booking on this room, yet!</Text>
 

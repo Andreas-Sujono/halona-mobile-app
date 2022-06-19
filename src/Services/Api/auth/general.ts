@@ -60,9 +60,7 @@ export default class AuthService extends BaseService {
   };
 
   updateAccount = async (data: any, userId: Id) => {
-    console.log('update: ', userId, data);
     const res = await this.patchRequest(`/users/${userId}`, data);
-    console.log('res:', res.data);
     return res.data;
   };
 

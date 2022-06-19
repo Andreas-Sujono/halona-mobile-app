@@ -23,6 +23,8 @@ const initialState = initEntityState({
     availableRoomsCount: 0,
     allRoomsCount: 0,
   },
+  mainBookingDateView: new Date().toDateString(),
+  useFloorPlanView: true,
 });
 
 function reducer(state = initialState, action: AnyAction) {

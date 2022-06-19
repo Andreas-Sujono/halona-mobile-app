@@ -9,3 +9,7 @@ export const selectAllBookings = (state: RootState) => {
   return selectBookingGeneralState(state).allBookings;
 };
 export const selectRoomSummary = (state: RootState) => selectBookingGeneralState(state).roomSummary;
+export const selectMainBookingDateView = (state: RootState) =>
+  selectBookingGeneralState(state).mainBookingDateView;
+export const selectUseFloorPlanView = (state: RootState) =>
+  selectBookingGeneralState(state).useFloorPlanView;

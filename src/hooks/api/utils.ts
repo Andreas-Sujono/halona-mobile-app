@@ -10,7 +10,7 @@ export const validateAfterCall = (
   showSuccess = false,
   successMessage = ''
 ) => {
-  if (res.errorCode) {
+  if (res?.errorCode) {
     if (showError) {
       Toast.show({
         type: 'error',
