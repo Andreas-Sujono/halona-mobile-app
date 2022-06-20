@@ -1,11 +1,12 @@
 import React from 'react';
 import { createNativeStackNavigator, NativeStackHeaderProps } from '@react-navigation/native-stack';
 import BookingHistoryScreen from 'screens/BookingHistory/MainScreen/index';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AddEditBookingScreen from 'screens/BookingHistory/AddEditBookingScreen';
 import { navigate } from './utils';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const HomeStack = createNativeStackNavigator();
 
@@ -23,14 +24,14 @@ function BookingHistoryStackScreen() {
     });
 
   const renderHomeHeader = (props: NativeStackHeaderProps) => (
-    <View style={styles.bookingHeader}>
+    <SafeAreaView style={styles.bookingHeader}>
       <Text category="h6" style={styles.bookingHeaderText}>
         {props?.options?.headerTitle as string}
       </Text>
       <TouchableOpacity style={styles.bookingHeaderButton} onPress={goToAddEditBookingScreen}>
         <Icon name="plus" size={16} color="white" />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 
   // const renderEditBookingHeader = (props: NativeStackHeaderProps) => (
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 56,
+    paddingTop: 24,
     paddingBottom: 12,
     flexDirection: 'row',
   },
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
   bookingHeaderButton: {
     position: 'absolute',
     right: 16,
-    top: 44,
+    top: 12,
     borderRadius: 30,
     width: 40,
     height: 40,

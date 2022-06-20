@@ -1,8 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { memo, useContext, useState } from 'react';
 import { Layout, Text, Divider, Button } from '@ui-kitten/components';
-import { Image, StyleSheet, View, Text as NativeText, ActivityIndicator } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {
+  Image,
+  StyleSheet,
+  View,
+  Text as NativeText,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
 import { RoomDetailDrawerContext } from 'Context/useRoomDetailBottomDrawerContext';
 import { navigate } from 'navigators/utils';
 import { useFloorPlanData } from 'hooks/api/booking/useRoomData';
@@ -40,10 +46,10 @@ export const mapStatusToInfo = {
 
 function FloorPlan() {
   const { data: allRooms, isLoading } = useFloorPlanData();
-  const [currentFloorId, setCurrentFloorId] = useState(0);
+  const [currentFloorId, setCurrentFloorId] = useState(1);
   const useFloorPlanView = useAppSelector(selectUseFloorPlanView);
 
-  const chosenRooms = allRooms?.find((item: any) => item.id === currentFloorId)?.rooms || [];
+  const chosenRooms = allRooms?.find((item: any) => item.floor === currentFloorId)?.rooms || [];
 
   const roomDetailDrawerContext = useContext(RoomDetailDrawerContext);
 
@@ -167,17 +173,17 @@ function FloorPlan() {
             style={[
               styles.button,
               {
-                borderBottomColor: item.id === currentFloorId ? '#0d43ee' : 'white',
+                borderBottomColor: item.floor === currentFloorId ? '#0d43ee' : 'white',
                 borderBottomWidth: 3,
               },
             ]}
-            onPress={() => setCurrentFloorId(item.id)}
+            onPress={() => setCurrentFloorId(item.floor)}
           >
             <NativeText
               style={[
                 styles.buttonText,
                 {
-                  color: item.id === currentFloorId ? '#0d43ee' : 'grey',
+                  color: item.floor === currentFloorId ? '#0d43ee' : 'grey',
                 },
               ]}
             >

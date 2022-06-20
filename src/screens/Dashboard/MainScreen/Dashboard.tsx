@@ -42,7 +42,7 @@ function HomeScreen() {
 
   const onSelectDateView = (date: Date) => {
     dispatch(setMainBookingDateView(date));
-    setTimeout(onRefresh, 10);
+    setTimeout(onRefresh, 1);
   };
 
   const onSelectFloorPlanView = (value: boolean) => {

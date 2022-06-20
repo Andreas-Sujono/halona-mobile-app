@@ -1,8 +1,7 @@
 import React, { memo, useState } from 'react';
-import { StyleSheet, View, SafeAreaView, Image, useWindowDimensions } from 'react-native';
+import { StyleSheet, View, Image, useWindowDimensions, ScrollView } from 'react-native';
 import { Button, Card, Layout, Text, Input } from '@ui-kitten/components';
 import { navigate } from 'navigators/utils';
-import { ScrollView } from 'react-native-gesture-handler';
 
 const Header = (props: any) => (
   <View {...props}>
