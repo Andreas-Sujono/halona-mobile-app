@@ -16,7 +16,9 @@ const queryClient = new QueryClient();
 
 const App = () => {
   useEffect(() => {
-    SplashScreen.hide();
+    if (SplashScreen && SplashScreen.hide) {
+      SplashScreen.hide();
+    }
   }, []);
 
   return (

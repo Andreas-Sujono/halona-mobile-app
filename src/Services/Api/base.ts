@@ -3,7 +3,9 @@ import { clearToken, getToken } from 'Services/Storage';
 import { parseObjectToCamelCase } from 'utils';
 
 const API_URL =
-  process.env.NODE_ENV === 'development' ? 'http://18.141.202.3' : 'http://18.141.202.3';
+  process.env.NODE_ENV === 'development'
+    ? 'https://andreassujono.com'
+    : 'https://andreassujono.com';
 
 export const API_BASE_URL_PATH = '/halona-server/api/v1';
 

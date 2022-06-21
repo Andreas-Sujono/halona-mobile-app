@@ -20,8 +20,9 @@ features:
 - v - infinite scrolling (DONE*)
 - v - offline cache data (DONE - save in redux persist)
 - v - check for no internet, cannot POST data (DONE - create mutation wrapper + query structure)
-- auto update app, apk
-- customized splash screen and app icon for both ios and android (auto update from server)
+- auto update app, apk 
+    - https://github.com/mikehardy/react-native-update-apk/blob/master/example/App.js
+- customized splash screen and app icon for both ios and android (auto update from server) 
 
 
 Extras:
@@ -49,7 +50,11 @@ Next:
 - logging & monitoring
 - generate APK file for both androind and ios
     - https://instamobile.io/android-development/generate-react-native-release-build-android/
+    - https://reactnative.dev/docs/signed-apk-android
+        - always update the password in android/gradle.properties
+        - generate apk from aab --> https://www.youtube.com/watch?v=5tgcogEoIiQ&ab_channel=ProgrammingwithMash
     - how to upgrade, force upgrade, version update
+
 
 
 #### Start application
