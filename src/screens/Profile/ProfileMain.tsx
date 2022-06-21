@@ -17,13 +17,13 @@ import { navigate } from 'navigators/utils';
 function ProfileMainScreen() {
   const { mutate: logout } = useLogout();
   const { data: myAccount } = useMyAccountData();
-  console.log('myAccount: ', myAccount);
+  // console.log('myAccount: ', myAccount);
 
-  const goToUpdateProfileScreen = () =>
+  const goToChildScreen = (screenName = '') =>
     navigate('BottomTabs', {
       screen: 'ProfileStack',
       params: {
-        screen: 'UpdateProfile',
+        screen: screenName,
       },
     });
 
@@ -57,9 +57,20 @@ function ProfileMainScreen() {
             </View>
           </ImageBackground>
         </View>
-        <TouchableOpacity style={styles.pageSectionContainer} onPress={goToUpdateProfileScreen}>
+        <TouchableOpacity
+          style={styles.pageSectionContainer}
+          onPress={() => goToChildScreen('UpdateProfile')}
+        >
           <Text category="p1" style={styles.pageLink}>
             Update Profile
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.pageSectionContainer}
+          onPress={() => goToChildScreen('Settings')}
+        >
+          <Text category="p1" style={styles.pageLink}>
+            Settings
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.pageSectionContainer} onPress={() => logout(true)}>

@@ -11,6 +11,7 @@ import { QueryClientProvider, QueryClient } from 'react-query';
 import { PopUpProvider } from 'components/PopUp';
 import { InternetConnectivityProvider } from 'Context/useInternetConnectivity';
 import SplashScreen from 'react-native-splash-screen';
+import { CheckAppUpdateProvider } from 'Context/useCheckAppUpdate';
 
 const queryClient = new QueryClient();
 
@@ -36,7 +37,9 @@ const App = () => {
           <QueryClientProvider client={queryClient}>
             <PopUpProvider>
               <InternetConnectivityProvider>
-                <ApplicationMainNavigator />
+                <CheckAppUpdateProvider>
+                  <ApplicationMainNavigator />
+                </CheckAppUpdateProvider>
               </InternetConnectivityProvider>
             </PopUpProvider>
           </QueryClientProvider>

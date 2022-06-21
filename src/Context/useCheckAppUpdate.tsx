@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo, useRef } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { Alert } from 'react-native';
 import * as UpdateAPK from 'rn-update-apk';
 
@@ -10,6 +10,7 @@ export const CheckAppUpdateContext = React.createContext({
     apkUrl: 'https://fyp-ntux.s3.ap-southeast-1.amazonaws.com/apk/app-release.apk',
     forceUpdate: false,
   },
+  onCheckServerVersion: () => {},
 });
 
 export const CheckAppUpdateProvider = memo(({ children }: any) => {
@@ -25,29 +26,24 @@ export const CheckAppUpdateProvider = memo(({ children }: any) => {
     progressMeter: 0,
   });
 
-  const updateState = (key: string, value: any) => {
+  const updateState = (key: keyof typeof value, value: any) => {
     setValue({
       ...value,
       [key]: value,
     });
   };
 
-  const updaterRef = useRef(null);
-
   useEffect(() => {
-    updaterRef.current = new UpdateAPK.UpdateAPK({
+    const updater = new UpdateAPK.UpdateAPK({
       // iOS must use App Store and this is the app ID. This is a sample: "All Birds of Ecuador" (¡Qué lindo!)
       iosAppId: 'APP_STORE_ID',
-
-      apkVersionUrl:
-        'https://raw.githubusercontent.com/mikehardy/react-native-update-apk/master/example/test-version.json',
+      apkVersionUrl: 'https://andreassujono.com/halona-server/api/v1/common/app-version',
 
       //apkVersionOptions is optional, you should use it if you need to pass options to fetch request
       apkVersionOptions: {
         method: 'GET',
         headers: {},
       },
-
       // The name of this 'fileProviderAuthority' is defined in AndroidManifest.xml. THEY MUST MATCH.
       fileProviderAuthority: 'com.halona',
 
@@ -90,7 +86,7 @@ export const CheckAppUpdateProvider = memo(({ children }: any) => {
         console.log(`downloadApkProgress callback called - ${progress}%...`);
         // This is your opportunity to provide feedback to users on download progress
         // If you hae a state variable it is trivial to update the UI
-        // this.setState({ downloadProgress: progress });
+        updateState('progressMeter', progress);
       },
 
       // This is called prior to the update. If you throw it will abort the update
@@ -104,6 +100,8 @@ export const CheckAppUpdateProvider = memo(({ children }: any) => {
         Alert.alert('There was an error', err.message);
       },
     });
+
+    updateState('updater', updater);
   }, []);
 
   useEffect(() => {
@@ -124,10 +122,21 @@ export const CheckAppUpdateProvider = memo(({ children }: any) => {
 
   const onCheckServerVersion = () => {
     console.log('checking for update');
-    if (updaterRef.current) {
-      (updaterRef.current as any).checkUpdate();
+    if (value.updater) {
+      (value.updater as any).checkUpdate();
     }
+    return;
   };
 
-  return <CheckAppUpdateContext.Provider value={value}>{children}</CheckAppUpdateContext.Provider>;
+  console.log('value updater: ', value);
+  return (
+    <CheckAppUpdateContext.Provider
+      value={{
+        ...value,
+        onCheckServerVersion,
+      }}
+    >
+      {children}
+    </CheckAppUpdateContext.Provider>
+  );
 });

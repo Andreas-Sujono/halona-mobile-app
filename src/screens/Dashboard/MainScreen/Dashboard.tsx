@@ -82,7 +82,7 @@ function HomeScreen() {
           </Layout>
           <SummaryCard />
           <FloorPlan />
-          <Notifications />
+          {/* <Notifications /> */}
         </SafeAreaView>
       </ScrollView>
       <RoomDetailDrawerRender />
