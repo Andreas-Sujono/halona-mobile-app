@@ -20,6 +20,7 @@ function SettingScreen() {
           <Text style={styles.pageLink}>Check Updates</Text>
         </View>
       </TouchableOpacity>
+      <Text style={styles.pageSectionContainer}>Installed Version Code: 0.0.1</Text>
     </ScrollView>
   );
 }

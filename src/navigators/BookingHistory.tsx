@@ -1,7 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator, NativeStackHeaderProps } from '@react-navigation/native-stack';
 import BookingHistoryScreen from 'screens/BookingHistory/MainScreen/index';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AddEditBookingScreen from 'screens/BookingHistory/AddEditBookingScreen';
@@ -74,10 +74,10 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 20,
+    paddingTop: Platform.OS === 'ios' ? 25 : 5,
     paddingBottom: 0,
     flexDirection: 'row',
-    height: 100,
+    height: Platform.OS === 'ios' ? 100 : 60,
     margin: 0,
   },
   bookingHeaderText: {
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 0,
     padding: 0,
-    height: 20,
+    height: Platform.OS === 'ios' ? 30 : 30,
     position: 'relative',
     right: -20,
   },

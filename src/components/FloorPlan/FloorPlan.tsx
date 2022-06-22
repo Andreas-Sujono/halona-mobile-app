@@ -141,14 +141,16 @@ function FloorPlan() {
         <Divider style={{ margin: 8 }} />
 
         <View>
-          {Object.entries(mapStatusToInfo).map(([key, info]) => (
-            <View key={key} style={styles.badgeContainer}>
-              <View style={[styles.badgeInfo, { backgroundColor: info.color }]} />
-              <Text appearance="hint" category="p2">
-                &nbsp;{info.infoName}
-              </Text>
-            </View>
-          ))}
+          {Object.entries(mapStatusToInfo)
+            .slice(0, -1)
+            .map(([key, info]) => (
+              <View key={key} style={styles.badgeContainer}>
+                <View style={[styles.badgeInfo, { backgroundColor: info.color }]} />
+                <Text appearance="hint" category="p2">
+                  &nbsp;{info.infoName}
+                </Text>
+              </View>
+            ))}
         </View>
       </>
     );

@@ -23,6 +23,8 @@ features:
 - auto update app, apk 
     - https://github.com/mikehardy/react-native-update-apk/blob/master/example/App.js
 - customized splash screen and app icon for both ios and android (auto update from server) 
+- app theme (light & dark)
+- normalize font size, color. --> allow user to set
 
 
 Extras:
@@ -69,6 +71,7 @@ Next:
 
 
 #### App features
+version 0.0.1
 - Home dashboard
     - summary statistics: avail room, net income
     - floor plan

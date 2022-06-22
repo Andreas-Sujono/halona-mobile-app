@@ -2,7 +2,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import { Button, Datepicker, Input, Text } from '@ui-kitten/components';
 import { Booking, BookingStatus, BookingType } from 'model';
-import { StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, ScrollView, ActivityIndicator, Platform } from 'react-native';
 import Select from 'components/Select';
 import {
   useBookingData,
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
   Container: {
     flex: 1,
     backgroundColor: 'white',
-    padding: 16,
+    padding: Platform.OS === 'ios' ? 24 : 26,
     paddingTop: 22,
   },
   input: {

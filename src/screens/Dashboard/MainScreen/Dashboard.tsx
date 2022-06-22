@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Datepicker, Layout, Text, Toggle } from '@ui-kitten/components';
 import { SafeAreaView, StyleSheet, ScrollView, RefreshControl, View } from 'react-native';
 import SummaryCard from './SummaryCard';
-import Notifications from './Notifications';
+// import Notifications from './Notifications';
 import FloorPlan from 'components/FloorPlan';
 import { RoomDetailDrawerContext } from 'Context/useRoomDetailBottomDrawerContext';
 import RoomDetailBottomDrawer from 'components/FloorPlan/RoomDetailBottomDrawer';

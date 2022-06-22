@@ -1,5 +1,6 @@
+import { Text } from '@ui-kitten/components';
 import React, { memo } from 'react';
-import { StyleSheet, ScrollView, View, Text, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, ScrollView, View, Image, TouchableOpacity } from 'react-native';
 import SummaryCard from './SummaryCard';
 
 // hi, [avail rooom] [notif], room booking (+ create, update), booking summary
@@ -40,11 +41,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 16,
+    padding: 8,
   },
   cardIcon: {
-    width: 40,
-    height: 40,
+    width: 60,
+    height: 60,
   },
   cardText: {
     fontWeight: '400',

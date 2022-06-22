@@ -7,7 +7,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "deploy-android": "cd android && ./gradlew assembleRelease"
   },
   "dependencies": {
     "@eva-design/eva": "^2.1.1",
@@ -19,6 +20,9 @@
     "@reduxjs/toolkit": "^1.8.2",
     "@ui-kitten/components": "^5.1.2",
     "add": "^2.0.6",
+    "appcenter": "^4.4.4",
+    "appcenter-analytics": "^4.4.4",
+    "appcenter-crashes": "^4.4.4",
     "axios": "^0.27.2",
     "moment": "^2.29.3",
     "react": "17.0.2",
@@ -36,7 +40,6 @@
     "redux-persist": "^6.0.0",
     "redux-persist-transform-filter": "^0.0.20",
     "redux-thunk": "^2.4.1",
-    "rn-update-apk": "^5.0.0",
     "styled-components": "^5.3.5",
     "yarn": "^1.22.19"
   },
