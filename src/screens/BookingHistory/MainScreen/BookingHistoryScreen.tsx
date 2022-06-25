@@ -7,7 +7,7 @@ import {
   useTodayBookingData,
 } from 'hooks/api/booking/useBookingData';
 import { QUERY_KEY } from 'hooks/api/queryKeys';
-import React, { useState } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -29,11 +29,12 @@ export const FILTER: any = {
 
 function BookingHistoryScreen() {
   const [searchValue, setSearchValue] = useState('');
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState('');
   const [page, setPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState('ALL'); //ALL, PENDING_ROOM, FUTURE
 
-  const { data, isLoading, hasNextPage, fetchNextPage } = useAllBookingsData();
+  const { data, isLoading, hasNextPage, fetchNextPage } = useAllBookingsData(debouncedSearchValue);
   const { data: pendingBookingsData } = usePendingRoomBookingData();
   const { data: futureBookingData } = useFutureBookingData();
   const { data: todayBookingData } = useTodayBookingData();
@@ -67,6 +68,18 @@ function BookingHistoryScreen() {
     </View>
   );
 
+  const seachRef = useRef();
+  const onSearch = (text: string) => {
+    setSearchValue(text);
+    if (seachRef.current) {
+      clearTimeout(seachRef.current);
+    } else {
+      setTimeout(() => {
+        setDebouncedSearchValue(text);
+      }, 100);
+    }
+  };
+
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     if (filter === 'ALL') {
@@ -98,9 +111,8 @@ function BookingHistoryScreen() {
     chosenData = todayBookingData;
   }
 
-  return (
-    <View style={styles.container}>
-      <SearchBar value={searchValue} onChangeText={(text) => setSearchValue(text)} />
+  const renderFilterButtons = () => {
+    return (
       <View style={styles.buttonContainer}>
         {Object.keys(FILTER).map((key: any) => (
           <TouchableOpacity
@@ -138,6 +150,14 @@ function BookingHistoryScreen() {
           </TouchableOpacity>
         ))}
       </View>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <SearchBar value={searchValue} onChangeText={(text) => onSearch(text)} />
+
+      {!searchValue && renderFilterButtons()}
 
       <FlatList
         contentContainerStyle={{ flexGrow: 1, backgroundColor: 'white' }}
@@ -211,4 +231,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookingHistoryScreen;
+export default memo(BookingHistoryScreen);

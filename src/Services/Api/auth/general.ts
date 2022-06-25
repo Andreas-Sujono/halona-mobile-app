@@ -70,6 +70,12 @@ export default class AuthService extends BaseService {
       errorMessage: '',
     };
   };
+
+  getLanguage = async (lang = 'en') => {
+    console.log('get language', lang);
+    const res = await this.getRequest(`/app/language?lang=${lang}`);
+    return res.data;
+  };
 }
 
 //common instance of service

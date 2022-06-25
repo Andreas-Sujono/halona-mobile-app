@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useRef } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import {
   Animated,
   Dimensions,
@@ -37,10 +37,7 @@ export enum DrawerState {
   CLOSED = 0,
 }
 
-const BottomDrawer: React.FunctionComponent<BottomDrawerProps> = ({
-  children,
-  onDrawerStateChange,
-}) => {
+function BottomDrawer({ children, onDrawerStateChange }: BottomDrawerProps) {
   const { height } = Dimensions.get('window');
   const y = React.useRef(new Animated.Value(DrawerState.CLOSED)).current;
   const drawerState = React.useRef(new Animated.Value(DrawerState.CLOSED)).current;
@@ -108,6 +105,6 @@ const BottomDrawer: React.FunctionComponent<BottomDrawerProps> = ({
       {children}
     </Animated.View>
   );
-};
+}
 
-export default BottomDrawer;
+export default memo(BottomDrawer);

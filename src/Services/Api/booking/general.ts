@@ -59,8 +59,8 @@ export default class BookingService extends BaseService {
     return res.data;
   };
 
-  getAllBookings = async (page = 1, limit = 25) => {
-    const res = await this.getRequest(`/bookings?page=${page}&limit=${limit}`);
+  getAllBookings = async (page = 1, limit = 25, search = '') => {
+    const res = await this.getRequest(`/bookings?page=${page}&limit=${limit}&search=${search}`);
     return res.data;
   };
 

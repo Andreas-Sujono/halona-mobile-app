@@ -1,0 +1,7 @@
+{
+    "dashboard": {
+        "welcome": "Selamat kembali {{name}}",
+        "manage_booking": "Atur booking!",
+        "lv": "Lt"
+    }
+}

@@ -12,7 +12,9 @@ import { PopUpProvider } from 'components/PopUp';
 import { InternetConnectivityProvider } from 'Context/useInternetConnectivity';
 import SplashScreen from 'react-native-splash-screen';
 import { CheckAppUpdateProvider } from 'Context/useCheckAppUpdate';
+import i18n from './i18n/config';
 
+export const initI18n = i18n;
 const queryClient = new QueryClient();
 
 const App = () => {

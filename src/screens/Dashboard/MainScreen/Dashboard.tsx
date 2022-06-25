@@ -12,6 +12,8 @@ import { useAppDispatch, useAppSelector } from 'Store';
 import { selectMainBookingDateView, selectUseFloorPlanView } from 'Store/Selector/booking';
 import { setMainBookingDateView, setUseFloorPlanView } from 'Store/Actions/booking/general';
 import PendingRoomSection from './PendingRoomSection';
+import { useTranslation } from 'react-i18next';
+import { selectUser } from 'Store/Selector/auth';
 
 // hi, [avail rooom] [notif], room booking (+ create, update), booking summary
 // finance: add cost, see income, statistic
@@ -21,6 +23,8 @@ function HomeScreen() {
   const roomDetailContext = useContext(RoomDetailDrawerContext);
   const mainBookingDateView = useAppSelector(selectMainBookingDateView);
   const useFloorPlanView = useAppSelector(selectUseFloorPlanView);
+  const { t } = useTranslation();
+  const me = useAppSelector(selectUser);
 
   const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
@@ -61,10 +65,10 @@ function HomeScreen() {
         <SafeAreaView style={styles.Container}>
           <Layout style={styles.topContainer}>
             <Text category="h6" style={styles.welcomeTitleText}>
-              Hi Andreas Sujono!
+              {t('dashboard.welcome', { name: me.fullName })}
             </Text>
             <Text category="h3" style={styles.subtitleText}>
-              Manage Book
+              {t('dashboard.manage_booking')}
             </Text>
 
             <View style={styles.mainForm}>

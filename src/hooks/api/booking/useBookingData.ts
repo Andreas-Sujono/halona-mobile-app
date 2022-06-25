@@ -9,14 +9,14 @@ import { QUERY_KEY } from '../queryKeys';
 import { handleCallFailure, useWrappedMutation, validateAfterCall } from '../utils';
 import { useContext } from 'react';
 
-export const useAllBookingsData = () => {
+export const useAllBookingsData = (searchText = '') => {
   const dispatch = useAppDispatch();
   const { isConnected } = useContext(InternetConnectivityContext);
   const initialData = useAppSelector(selectAllBookings);
 
   return useInfiniteQuery(
-    QUERY_KEY.BOOKINGS,
-    ({ pageParam = 0 }) => bookingService.getAllBookings(pageParam || 1),
+    [QUERY_KEY.BOOKINGS, searchText],
+    ({ pageParam = 0, queryKey }) => bookingService.getAllBookings(pageParam || 1, 25, queryKey[1]),
     {
       getNextPageParam: (lastPage) => (lastPage?.hasNextPage ? lastPage.page + 1 : undefined),
       onSuccess: (res: any) => {

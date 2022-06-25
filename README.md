@@ -25,6 +25,7 @@ features:
 - customized splash screen and app icon for both ios and android (auto update from server) 
 - app theme (light & dark)
 - normalize font size, color. --> allow user to set
+- internvalization --> cache & fetch from server
 
 
 Extras:
@@ -91,3 +92,10 @@ booking history
     - search bar 
         - filter by: date / month, status
     - show all booking (infinite scrolling)
+
+## for building APK
+- change password of store key in gradle.properties:
+MYAPP_UPLOAD_STORE_PASSWORD
+MYAPP_UPLOAD_KEY_PASSWORD
+
+- 
