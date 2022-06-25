@@ -72,6 +72,21 @@ export default class BookingService extends BaseService {
     return res.data;
   };
 
+  getPendingRoomBookings = async () => {
+    const res = await this.getRequest('/bookings/pending-rooms');
+    return res.data;
+  };
+
+  getFutureBookings = async () => {
+    const res = await this.getRequest('/bookings/future');
+    return res.data;
+  };
+
+  getTodayBookings = async () => {
+    const res = await this.getRequest('/bookings/today');
+    return res.data;
+  };
+
   updateRoom = async (roomId: Id, data: Partial<Room>) => {
     const res = await this.patchRequest(`/rooms/${roomId}`, {
       status: data.status,

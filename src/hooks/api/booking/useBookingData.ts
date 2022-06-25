@@ -212,3 +212,51 @@ export const useCheckOutBooking = (bookingIdInitial: Id) => {
     }
   );
 };
+
+export const usePendingRoomBookingData = () => {
+  const { isConnected } = useContext(InternetConnectivityContext);
+  return useQuery(QUERY_KEY.PENDING_ROOM_BOOKINGS, () => bookingService.getPendingRoomBookings(), {
+    onSuccess: (res: any) => {
+      if (!validateAfterCall(res)) {
+        return;
+      }
+    },
+    onError: (res: any) => {
+      handleCallFailure(res.message);
+    },
+    enabled: isConnected, //only call when there's internet
+    initialData: [],
+  });
+};
+
+export const useFutureBookingData = () => {
+  const { isConnected } = useContext(InternetConnectivityContext);
+  return useQuery(QUERY_KEY.FUTURE_BOOKINGS, () => bookingService.getFutureBookings(), {
+    onSuccess: (res: any) => {
+      if (!validateAfterCall(res)) {
+        return;
+      }
+    },
+    onError: (res: any) => {
+      handleCallFailure(res.message);
+    },
+    enabled: isConnected, //only call when there's internet
+    initialData: [],
+  });
+};
+
+export const useTodayBookingData = () => {
+  const { isConnected } = useContext(InternetConnectivityContext);
+  return useQuery(QUERY_KEY.TODAY_BOOKINGS, () => bookingService.getTodayBookings(), {
+    onSuccess: (res: any) => {
+      if (!validateAfterCall(res)) {
+        return;
+      }
+    },
+    onError: (res: any) => {
+      handleCallFailure(res.message);
+    },
+    enabled: isConnected, //only call when there's internet
+    initialData: [],
+  });
+};

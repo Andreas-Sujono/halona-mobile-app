@@ -11,6 +11,7 @@ import { QUERY_KEY } from 'hooks/api/queryKeys';
 import { useAppDispatch, useAppSelector } from 'Store';
 import { selectMainBookingDateView, selectUseFloorPlanView } from 'Store/Selector/booking';
 import { setMainBookingDateView, setUseFloorPlanView } from 'Store/Actions/booking/general';
+import PendingRoomSection from './PendingRoomSection';
 
 // hi, [avail rooom] [notif], room booking (+ create, update), booking summary
 // finance: add cost, see income, statistic
@@ -36,6 +37,7 @@ function HomeScreen() {
     queryClient.invalidateQueries([QUERY_KEY.ROOMS_FLOOR_PLAN, mainBookingDateView]);
     queryClient.invalidateQueries(QUERY_KEY.FINANCE_SUMMARY_THIS_MONTH);
     queryClient.invalidateQueries([QUERY_KEY.ROOM_SUMMARY, mainBookingDateView]);
+    queryClient.invalidateQueries(QUERY_KEY.PENDING_ROOM_BOOKINGS);
     await new Promise((resolve) => setTimeout(resolve, 500));
     setRefreshing(false);
   }, [queryClient, mainBookingDateView]);
@@ -82,6 +84,7 @@ function HomeScreen() {
           </Layout>
           <SummaryCard />
           <FloorPlan />
+          <PendingRoomSection />
           {/* <Notifications /> */}
         </SafeAreaView>
       </ScrollView>

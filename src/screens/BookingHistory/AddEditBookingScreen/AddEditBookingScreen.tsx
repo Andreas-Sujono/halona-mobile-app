@@ -185,6 +185,7 @@ function AddEditBookingScreen({ route }: any) {
     if (!validateBookingData()) {
       return;
     }
+    queryClient.invalidateQueries(QUERY_KEY.PENDING_ROOM_BOOKINGS);
     updateBooking(bookingData);
     return;
   };
