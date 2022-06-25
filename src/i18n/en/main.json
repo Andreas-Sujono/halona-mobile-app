@@ -3,5 +3,12 @@
         "welcome": "Welcome back {{name}}",
         "manage_booking": "Manage booking!",
         "lv": "Lt"
+    },
+    "settings": {
+        "select_language": "Select Language",
+        "select_theme": "Select Theme",
+        "select_font_size_scale": "Select Font Size",
+        "check_updates": "Check updates",
+        "installed_version_code": "Installed Version Code: {{version}}"
     }
 }

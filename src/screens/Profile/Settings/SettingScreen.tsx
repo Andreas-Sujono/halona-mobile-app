@@ -1,6 +1,5 @@
 import React, { memo, useContext } from 'react';
-import { Text } from '@ui-kitten/components';
-import { StyleSheet, ScrollView, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { CheckAppUpdateContext } from 'Context/useCheckAppUpdate';
 // import { useMyAccountData } from 'hooks/api/auth/useUserData';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -8,7 +7,14 @@ import Select from 'components/Select';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'Store';
 import { selectFontSizeScale, selectTheme } from 'Store/Selector/auth/theme';
-import { setFontSizeScale, setTheme } from 'Store/Actions/auth/theme';
+import {
+  setFontSizeScale,
+  setTheme,
+  setToDarkColors,
+  setToLightColors,
+} from 'Store/Actions/auth/theme';
+import View from 'components/Native/View';
+import { Page, Text } from 'components/Native';
 
 const languageData = [
   {
@@ -36,34 +42,29 @@ const themeData = [
 ];
 const fontSizeData = [
   {
-    label: '60%',
-    value: 0.6,
-    index: 0,
-  },
-  {
     label: '80%',
     value: 0.8,
-    index: 1,
+    index: 0,
   },
   {
     label: '100%',
     value: 1,
-    index: 2,
+    index: 1,
   },
   {
     label: '120%',
     value: 1.2,
-    index: 3,
+    index: 2,
   },
   {
     label: '140%',
     value: 1.4,
-    index: 4,
+    index: 3,
   },
   {
     label: '160%',
     value: 1.6,
-    index: 5,
+    index: 4,
   },
 ];
 
@@ -80,6 +81,12 @@ function SettingScreen() {
 
   const changeTheme = (theme: any) => {
     dispatch(setTheme(theme));
+    if (theme === 'light') {
+      dispatch(setToLightColors());
+    }
+    if (theme === 'dark') {
+      dispatch(setToDarkColors());
+    }
   };
 
   const changeFontSizeScale = (scale: any) => {
@@ -87,9 +94,9 @@ function SettingScreen() {
   };
 
   return (
-    <ScrollView style={styles.Container}>
+    <Page style={styles.Container}>
       <View style={[styles.pageSectionContainer, styles.row]}>
-        <Text style={styles.rowLeft}>Select language:</Text>
+        <Text style={styles.rowLeft}>{t('settings.select_language')}</Text>
         <Select
           style={{
             flexGrow: 1,
@@ -100,7 +107,7 @@ function SettingScreen() {
         />
       </View>
       <View style={[styles.pageSectionContainer, styles.row]}>
-        <Text style={styles.rowLeft}>Select theme:</Text>
+        <Text style={styles.rowLeft}>{t('settings.select_theme')}</Text>
         <Select
           style={{
             flexGrow: 1,
@@ -111,7 +118,7 @@ function SettingScreen() {
         />
       </View>
       <View style={[styles.pageSectionContainer, styles.row]}>
-        <Text style={styles.rowLeft}>Font size scale:</Text>
+        <Text style={styles.rowLeft}>{t('settings.select_font_size_scale')}</Text>
         <Select
           style={{
             flexGrow: 1,
@@ -127,11 +134,13 @@ function SettingScreen() {
       >
         <View style={{ display: 'flex', flexDirection: 'row' }}>
           <Icon name="upload" size={16} color="#0d43ee" style={styles.icon} />
-          <Text style={styles.pageLink}>Check Updates</Text>
+          <Text style={styles.pageLink}>{t('settings.check_updates')}</Text>
         </View>
       </TouchableOpacity>
-      <Text style={styles.pageSectionContainer}>Installed Version Code: 0.0.1</Text>
-    </ScrollView>
+      <Text style={styles.pageSectionContainer}>
+        {t('settings.installed_version_code', { version: '0.0.1' })}
+      </Text>
+    </Page>
   );
 }
 

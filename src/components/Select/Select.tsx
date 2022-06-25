@@ -5,7 +5,7 @@ interface Item {
   id?: string;
   index: number;
   label: string;
-  value: string;
+  value: string | number;
   disabled?: boolean;
 }
 

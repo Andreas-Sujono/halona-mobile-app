@@ -3,5 +3,12 @@
         "welcome": "Selamat kembali {{name}}",
         "manage_booking": "Atur booking!",
         "lv": "Lt"
+    },
+    "settings": {
+        "select_language": "Pilih bahasa",
+        "select_theme": "Pilih tema",
+        "select_font_size_scale": "Pilih ukuran text",
+        "check_updates": "Cek updates",
+        "installed_version_code": "Versi code"
     }
 }

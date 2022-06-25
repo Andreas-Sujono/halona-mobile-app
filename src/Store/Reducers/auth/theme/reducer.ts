@@ -10,6 +10,12 @@ import { ActionTypes } from '../../../Actions/auth/theme';
 const initialState = initEntityState({
   colors: {
     primary: '#c38343',
+    secondary: 'white',
+    tertiary: 'white',
+    textPrimary: 'black',
+    textSecondary: 'grey',
+    texttertiary: 'lightgrey',
+    textCta: '#c38343',
   },
   theme: 'light', //light | dark
   fontSizeScale: 1,

@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
     marginBottom: 12,
-    color: COLORS.PRIMARY,
+    color: COLORS.TEXT_CTA,
   },
   cardValue: {
     marginTop: 8,
