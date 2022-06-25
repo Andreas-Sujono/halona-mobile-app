@@ -72,7 +72,6 @@ export default class AuthService extends BaseService {
   };
 
   getLanguage = async (lang = 'en') => {
-    console.log('get language', lang);
     const res = await this.getRequest(`/app/language?lang=${lang}`);
     return res.data;
   };

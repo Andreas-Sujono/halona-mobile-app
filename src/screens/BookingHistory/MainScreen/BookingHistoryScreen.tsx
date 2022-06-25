@@ -68,14 +68,16 @@ function BookingHistoryScreen() {
     </View>
   );
 
-  const seachRef = useRef();
+  const seachRef = useRef<any>(null);
   const onSearch = (text: string) => {
     setSearchValue(text);
     if (seachRef.current) {
       clearTimeout(seachRef.current);
+      seachRef.current = null;
     } else {
-      setTimeout(() => {
+      seachRef.current = setTimeout(() => {
         setDebouncedSearchValue(text);
+        seachRef.current = null;
       }, 100);
     }
   };

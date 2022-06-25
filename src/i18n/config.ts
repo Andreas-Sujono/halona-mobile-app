@@ -9,7 +9,6 @@ const loadResources = async (locale: string) => {
   return await authService
     .getLanguage(locale)
     .then((response) => {
-      console.log(' loadResources response: ', response);
       return response;
     })
     .catch((error) => {
@@ -21,7 +20,6 @@ const backendOptions = {
   loadPath: '{{lng}}|{{ns}}',
   request: (options: any, url: any, payload: any, callback: any) => {
     try {
-      console.log('get data: ', url);
       const [lng] = url.split('|');
       loadResources(lng).then((response) => {
         callback(null, {

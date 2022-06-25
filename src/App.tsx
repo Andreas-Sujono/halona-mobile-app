@@ -13,16 +13,27 @@ import { InternetConnectivityProvider } from 'Context/useInternetConnectivity';
 import SplashScreen from 'react-native-splash-screen';
 import { CheckAppUpdateProvider } from 'Context/useCheckAppUpdate';
 import i18n from './i18n/config';
+import { useTranslation } from 'react-i18next';
+import { unencryptedGetData } from 'Services/Storage';
 
 export const initI18n = i18n;
 const queryClient = new QueryClient();
 
 const App = () => {
+  const { i18n: _i18n } = useTranslation();
   useEffect(() => {
+    initLanguage();
     if (SplashScreen && SplashScreen.hide) {
       SplashScreen.hide();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const initLanguage = async () => {
+    const data = await unencryptedGetData('lang');
+    _i18n.changeLanguage(data?.lang || 'en');
+    _i18n.reloadResources(data?.lang || 'en');
+  };
 
   return (
     <Provider store={store}>

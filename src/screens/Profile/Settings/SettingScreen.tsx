@@ -15,6 +15,7 @@ import {
 } from 'Store/Actions/auth/theme';
 import View from 'components/Native/View';
 import { Page, Text } from 'components/Native';
+import { unencryptedSetData } from 'Services/Storage';
 
 const languageData = [
   {
@@ -93,6 +94,14 @@ function SettingScreen() {
     dispatch(setFontSizeScale(scale));
   };
 
+  const changeLanguage = async (language: any) => {
+    i18n.changeLanguage(language);
+    i18n.reloadResources(language);
+    await unencryptedSetData('lang', {
+      lang: language,
+    });
+  };
+
   return (
     <Page style={styles.Container}>
       <View style={[styles.pageSectionContainer, styles.row]}>
@@ -103,7 +112,7 @@ function SettingScreen() {
           }}
           items={languageData}
           selectedValue={languageValue}
-          onChangeValue={(value) => i18n.changeLanguage((value as any).value)}
+          onChangeValue={(value) => changeLanguage((value as any).value)}
         />
       </View>
       <View style={[styles.pageSectionContainer, styles.row]}>
