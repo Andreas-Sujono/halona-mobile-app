@@ -155,8 +155,11 @@ export const useCheckInBooking = (bookingIdInitial: Id) => {
   return useWrappedMutation(
     (data: { bookingId: Id }) => bookingService.checkInBooking(data.bookingId || bookingIdInitial),
     {
-      // onSuccess: (res: any) => {
-      // },
+      onSuccess: (res: any) => {
+        if (!validateAfterCall(res, true, true, 'Success check in')) {
+          return;
+        }
+      },
 
       onMutate: async (data: any) => {
         /**Optimistic mutation */
@@ -187,8 +190,11 @@ export const useCheckOutBooking = (bookingIdInitial: Id) => {
   return useWrappedMutation(
     (data: { bookingId: Id }) => bookingService.checkOutBooking(data.bookingId || bookingIdInitial),
     {
-      // onSuccess: (res: any) => {
-      // },
+      onSuccess: (res: any) => {
+        if (!validateAfterCall(res, true, true, 'Success check out')) {
+          return;
+        }
+      },
 
       onMutate: async (data: any) => {
         /**Optimistic mutation */
@@ -259,4 +265,23 @@ export const useTodayBookingData = () => {
     enabled: isConnected, //only call when there's internet
     initialData: [],
   });
+};
+
+export const useSendReceiptBooking = (bookingIdInitial: Id) => {
+  return useWrappedMutation(
+    (data: { bookingId: Id }) => bookingService.sendReceipt(data.bookingId || bookingIdInitial),
+    {
+      onSuccess: (res: any) => {
+        if (!validateAfterCall(res, true, true, 'Success sending receipt')) {
+          return;
+        }
+      },
+
+      onError: (_err: any) => {
+        //revert back updates
+        handleCallFailure(_err.message);
+      },
+      onSettled: () => {},
+    }
+  );
 };

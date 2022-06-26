@@ -5,6 +5,7 @@ import { PopUp } from 'components/PopUp';
 import BottomDrawer from 'components/PopUp/BottomDrawer';
 import { DrawerState } from 'components/PopUp/BottomDrawer/BottomDrawer';
 import Select from 'components/Select';
+import { useCheckInBooking, useCheckOutBooking } from 'hooks/api/booking/useBookingData';
 import { useUpdateRoom } from 'hooks/api/booking/useRoomData';
 import { Room, RoomStatus } from 'model';
 import { navigate } from 'navigators/utils';
@@ -51,6 +52,13 @@ function RoomDetailBottomDrawer({ room, onClose }: { room: Room; onClose: () => 
   const [roomData, setRoomData] = useState(room);
   const [selectedIndex, setSelectedIndex] = React.useState<any>(new IndexPath(0));
   const { mutate, isLoading } = useUpdateRoom(room.id);
+  const { mutate: checkInMutate } = useCheckInBooking(-1);
+  const { mutate: checkOutMutate } = useCheckOutBooking(-1);
+
+  const currentBooking =
+    room.currentBooking && Object.keys(room.currentBooking).length > 0
+      ? room.currentBooking
+      : (room as any)?.activeBookings?.[0] || null;
 
   const onDrawerStateChange = (state: DrawerState) => {
     if (state === DrawerState.CLOSED) {
@@ -101,17 +109,18 @@ function RoomDetailBottomDrawer({ room, onClose }: { room: Room; onClose: () => 
       textBody: 'You cannot undo this action!',
     });
     if (room.status === RoomStatus.BOOKED || room.status === RoomStatus.AVAILABLE) {
+      checkInMutate({
+        bookingId: currentBooking?.id,
+      });
       //handle check in here
     }
     if (room.status === RoomStatus.INHABITED) {
       //handle check out here
+      checkOutMutate({
+        bookingId: currentBooking?.id,
+      });
     }
   };
-
-  const currentBooking =
-    room.currentBooking && Object.keys(room.currentBooking).length > 0
-      ? room.currentBooking
-      : (room as any)?.activeBookings?.[0] || null;
 
   return (
     <BottomDrawer onDrawerStateChange={onDrawerStateChange}>

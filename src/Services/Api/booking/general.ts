@@ -127,6 +127,11 @@ export default class BookingService extends BaseService {
     return res.data;
   };
 
+  sendReceipt = async (bookingId: Id) => {
+    const res = await this.postRequest(`/bookings/${bookingId}/receipt`, {});
+    return res.data;
+  };
+
   checkOutBooking = async (bookingId: Id) => {
     const res = await this.patchRequest(`/bookings/${bookingId}/check-out`, {});
     return res.data;

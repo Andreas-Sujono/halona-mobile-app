@@ -8,6 +8,7 @@ import {
   useBookingData,
   useCreateBooking,
   useDeleteBooking,
+  useSendReceiptBooking,
   useUpdateBooking,
 } from 'hooks/api/booking/useBookingData';
 import { useAllRoomsData, useAvailableRoomsData } from 'hooks/api/booking/useRoomData';
@@ -96,6 +97,9 @@ function AddEditBookingScreen({ route }: any) {
   const { mutate: updateBooking, isLoading: isUpdateLoading } = useUpdateBooking(bookingData?.id);
   const { mutate: createBooking, isLoading: isCreateLoading } = useCreateBooking();
   const { mutate: deleteBooking, isLoading: isDeleteLoading } = useDeleteBooking(bookingData?.id);
+  const { mutate: sendReceiptBooking, isLoading: isSendingLoading } = useSendReceiptBooking(
+    bookingData?.id
+  );
 
   const queryClient = useQueryClient();
   const { data } = useBookingData(bookingData.id);
@@ -187,6 +191,11 @@ function AddEditBookingScreen({ route }: any) {
     }
     queryClient.invalidateQueries(QUERY_KEY.PENDING_ROOM_BOOKINGS);
     updateBooking(bookingData);
+    return;
+  };
+
+  const onSendReceipt = () => {
+    sendReceiptBooking(bookingData);
     return;
   };
 
@@ -362,12 +371,26 @@ function AddEditBookingScreen({ route }: any) {
       {isEditMode && (
         <Button
           style={{
+            marginTop: 6,
+            borderWidth: 0,
+          }}
+          onPress={onSendReceipt}
+          appearance="outline"
+          disabled={isSendingLoading}
+        >
+          Send Receipt
+        </Button>
+      )}
+      {isEditMode && (
+        <Button
+          style={{
             marginBottom: 52,
             marginTop: 6,
             backgroundColor: '#de2944',
             borderWidth: 0,
           }}
           onPress={onDelete}
+          disabled={isDeleteLoading}
         >
           Delete
         </Button>
