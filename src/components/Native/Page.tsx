@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { View as RNView, ViewProps } from 'react-native';
+import { View as RNView, ViewProps, ScrollView as RNScrollView } from 'react-native';
 import { useAppSelector } from 'Store';
 import { selectColors } from 'Store/Selector/auth/theme';
 import { ColorType } from 'utils/colors';
@@ -7,13 +7,19 @@ import { ColorType } from 'utils/colors';
 function Page({
   children,
   bgColor = 'primary',
+  enableScroll = false,
   ...props
-}: { children?: React.ReactElement | React.ReactElement[]; bgColor?: ColorType } & ViewProps) {
+}: {
+  children?: React.ReactElement | React.ReactElement[];
+  bgColor?: ColorType;
+  enableScroll?: boolean;
+} & ViewProps) {
   const colors = useAppSelector(selectColors);
-  const injectedStyle = props.style && props.style instanceof Array ? props.style : [props.style];
   const selectedColor = colors[bgColor];
+  const injectedStyle = props.style && props.style instanceof Array ? props.style : [props.style];
+  const Node = enableScroll ? RNScrollView : RNView;
   return (
-    <RNView
+    <Node
       {...props}
       style={[
         ...injectedStyle,
@@ -24,7 +30,7 @@ function Page({
       ]}
     >
       {children}
-    </RNView>
+    </Node>
   );
 }
 

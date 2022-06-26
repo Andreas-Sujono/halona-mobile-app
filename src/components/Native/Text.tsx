@@ -35,7 +35,7 @@ function Text({
     <UIText
       {...props}
       style={[
-        injectedStyle,
+        ...injectedStyle,
         {
           color: selectedColor,
           fontSize: finalFontSize,

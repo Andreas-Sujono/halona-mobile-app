@@ -54,6 +54,7 @@ export const formatCurrency = (number: number) => {
     return 'Rp ' + numberString;
   } catch (e) {
     console.log(e);
+    return '';
   }
 };
 

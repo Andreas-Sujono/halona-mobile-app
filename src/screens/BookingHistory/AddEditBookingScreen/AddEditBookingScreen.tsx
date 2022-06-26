@@ -141,9 +141,9 @@ function AddEditBookingScreen({ route }: any) {
     if (!bookingData.price) {
       errMessage = 'Missing booking amount';
     }
-    if (!bookingData.rooms.length) {
-      errMessage = 'Missing rooms';
-    }
+    // if (!bookingData.rooms.length) {
+    //   errMessage = 'Missing rooms';
+    // }
 
     if (errMessage) {
       Toast.show({

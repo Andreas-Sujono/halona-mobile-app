@@ -5,17 +5,17 @@ export const COLORS = {
   TEXT_PRIMARY: '#000000',
   TEXT_SECONDARY: 'grey',
   TEXT_TERTIARY: 'lightgrey',
-  TEXT_CTA: '#0d43ee',
+  TEXT_CTA: '#046dbe',
 };
 
 export const DARK_COLORS = {
-  PRIMARY: '#2C3639',
+  PRIMARY: '#222222',
   SECONDARY: '#3F4E4F',
   TERTIARY: '#DCD7C9',
   TEXT_PRIMARY: 'white',
   TEXT_SECONDARY: 'grey',
   TEXT_TERTIARY: 'grey',
-  TEXT_CTA: '#0d43ee',
+  TEXT_CTA: '#046dbe',
 };
 
 export type ColorType =

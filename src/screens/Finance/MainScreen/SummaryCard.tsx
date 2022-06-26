@@ -50,8 +50,9 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 5,
     marginTop: 0,
-    flexDirection: 'column',
+    flexDirection: 'row',
     backgroundColor: 'transparent',
+    display: 'flex',
   },
   card: {
     flex: 1,
@@ -63,6 +64,7 @@ const styles = StyleSheet.create({
   },
   cardValue: {
     marginTop: 8,
+    fontSize: 18,
   },
 });
 

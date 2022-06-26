@@ -22,10 +22,10 @@ function View({
     <Node
       {...props}
       style={[
-        ...injectedStyle,
         {
           backgroundColor: selectedColor,
         },
+        ...injectedStyle,
       ]}
     >
       {children}

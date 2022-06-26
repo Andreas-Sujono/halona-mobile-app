@@ -96,7 +96,7 @@ function SettingScreen() {
 
   const changeLanguage = async (language: any) => {
     i18n.changeLanguage(language);
-    i18n.reloadResources(language);
+    i18n.reloadResources(language); //TODO: if cache exists, don't call api
     await unencryptedSetData('lang', {
       lang: language,
     });
