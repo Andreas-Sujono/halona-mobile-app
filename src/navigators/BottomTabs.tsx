@@ -50,6 +50,10 @@ const BottomTabsNavigator = () => {
           tabBarLabel: 'Finance',
           tabBarIcon: ({ color, size }) => renderFinanceIcon(color, size),
           headerShown: false,
+          tabBarStyle: {
+            paddingBottom: 6,
+            paddingTop: 4,
+          },
         }}
       />
       <Tab.Screen
@@ -59,6 +63,10 @@ const BottomTabsNavigator = () => {
           tabBarLabel: 'Dashboard',
           tabBarIcon: ({ color, size }) => renderHomeIcon(color, size),
           headerShown: false,
+          tabBarStyle: {
+            paddingBottom: 6,
+            paddingTop: 4,
+          },
         }}
       />
       <Tab.Screen
@@ -68,6 +76,10 @@ const BottomTabsNavigator = () => {
           tabBarLabel: 'Booking History',
           tabBarIcon: ({ color, size }) => renderBookingHistoryIcon(color, size),
           headerShown: false,
+          tabBarStyle: {
+            paddingBottom: 6,
+            paddingTop: 4,
+          },
         }}
       />
       <Tab.Screen
@@ -76,6 +88,10 @@ const BottomTabsNavigator = () => {
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => renderProfileIcon(color, size),
+          tabBarStyle: {
+            paddingBottom: 6,
+            paddingTop: 4,
+          },
         }}
       />
     </Tab.Navigator>

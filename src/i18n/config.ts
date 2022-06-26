@@ -40,6 +40,8 @@ i18n
   .use(HttpApi)
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
+    compatibilityJSON: 'v3',
+
     backend: backendOptions,
     // the translations
     // (tip move them in a JSON file and import them,

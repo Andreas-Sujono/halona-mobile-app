@@ -65,7 +65,7 @@ function HomeScreen() {
         <SafeAreaView style={styles.Container}>
           <Layout style={styles.topContainer}>
             <Text category="h6" style={styles.welcomeTitleText}>
-              {t('dashboard.welcome', { name: me.fullName })}
+              {t('dashboard.welcome', { name: me?.fullName })}
             </Text>
             <Text category="h3" style={styles.subtitleText}>
               {t('dashboard.manage_booking')}
