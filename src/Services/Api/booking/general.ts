@@ -1,4 +1,5 @@
 import axios from 'axios';
+import moment from 'moment';
 import { Booking, Id, Room } from '../../../model';
 import BaseService, { API_BASE_URL_PATH } from '../base';
 
@@ -105,7 +106,13 @@ export default class BookingService extends BaseService {
     return res.data;
   };
 
-  updateBooking = async (bookingId: Id, data: Room) => {
+  updateBooking = async (bookingId: Id, data: Booking) => {
+    if (data.bookingStartDate) {
+      data.bookingStartDate = moment(data.bookingStartDate).add(1, 'day').toDate();
+    }
+    if (data.bookingEndDate) {
+      data.bookingEndDate = moment(data.bookingEndDate).add(1, 'day').toDate();
+    }
     const res = await this.patchRequest(`/bookings/${bookingId}`, data);
     return res.data;
   };

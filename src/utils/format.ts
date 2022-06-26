@@ -47,7 +47,7 @@ export const formatCurrency = (number: number) => {
       i.substr(j).replace(/(\d{3})(?=\d)/g, '$1' + thousands) +
       (decimalCount
         ? decimal +
-          Math.abs(number - i)
+          Math.abs(number - Number(i))
             .toFixed(decimalCount)
             .slice(2)
         : '');

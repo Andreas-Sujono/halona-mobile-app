@@ -1,3 +1,4 @@
+import { Id } from './index';
 export enum RoomStatus {
   NOT_AVAILABLE = 'NOT_AVAILABLE',
   AVAILABLE = 'AVAILABLE',
@@ -59,4 +60,15 @@ export interface Booking {
   guestNRIC?: string;
   pendingPricePaid?: number;
   description?: string;
+}
+
+export interface FinanceRecord {
+  id: Id;
+  type: 'INCOME' | 'COST';
+  amount: number;
+  name: string;
+  category: string;
+  description: string;
+  date?: Date;
+  createdAt?: Date;
 }
