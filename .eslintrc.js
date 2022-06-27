@@ -8,8 +8,9 @@ module.exports = {
       ecmaVersion: 12,
       sourceType: "module",
   },
-  "rules": {
+  rules: {
     "comma-dangle": "off",
-    "@typescript-eslint/comma-dangle": ["error", "only-multiline"]
+    "@typescript-eslint/comma-dangle": ["error", "only-multiline"],
+    "@typescript-eslint/no-unused-vars": 1
   }
 };

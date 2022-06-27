@@ -1,8 +1,9 @@
 import React, { memo, useEffect, useState } from 'react';
 import { Button, Input } from '@ui-kitten/components';
-import { StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, ActivityIndicator } from 'react-native';
 import { useMyAccountData, useUpdateMyAccount } from 'hooks/api/auth/useUserData';
 import { User } from 'model';
+import { Page } from 'components/Native';
 
 function UpdateProfileScreen() {
   const { data } = useMyAccountData();
@@ -31,7 +32,7 @@ function UpdateProfileScreen() {
   };
 
   return (
-    <ScrollView style={styles.Container}>
+    <Page style={styles.Container}>
       <Input
         value={profileData?.fullName}
         label="Full Name*"
@@ -65,7 +66,7 @@ function UpdateProfileScreen() {
       >
         {isLoading ? <ActivityIndicator /> : 'Edit My Profile'}
       </Button>
-    </ScrollView>
+    </Page>
   );
 }
 

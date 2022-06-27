@@ -1,4 +1,5 @@
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useEffect } from 'react';
+// import * as UpdateAPK from 'rn-update-apk';
 
 export const CheckAppUpdateContext = React.createContext({
   appVersionDetails: {
@@ -20,6 +21,11 @@ export const CheckAppUpdateProvider = memo(({ children }: any) => {
     },
     onCheckServerVersion: () => {},
   });
+
+  // useEffect(() => {
+  //   console.log(UpdateAPK.getInstalledVersionCode());
+  //   TypeError: null is not an object (evaluating 'RNUpdateAPK.packageName')
+  // }, []);
 
   return <CheckAppUpdateContext.Provider value={value}>{children}</CheckAppUpdateContext.Provider>;
 });

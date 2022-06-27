@@ -7,10 +7,24 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import AddEditBookingScreen from 'screens/BookingHistory/AddEditBookingScreen';
 import { navigate } from './utils';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { selectColors } from 'Store/Selector/auth/theme';
+import { useAppSelector } from 'Store';
 
 const HomeStack = createNativeStackNavigator();
 
 function BookingHistoryStackScreen() {
+  const colors = useAppSelector(selectColors);
+
+  const options: any = {
+    headerStyle: {
+      backgroundColor: colors.secondary,
+    },
+    headerTitleStyle: {
+      color: colors.textPrimary,
+    },
+    headerTintColor: colors.textPrimary,
+  };
+
   const goToAddEditBookingScreen = () =>
     navigate('BottomTabs', {
       screen: 'BookingHistoryStack',
@@ -24,8 +38,23 @@ function BookingHistoryStackScreen() {
     });
 
   const renderHomeHeader = (props: NativeStackHeaderProps) => (
-    <SafeAreaView style={styles.bookingHeader}>
-      <Text category="h6" style={styles.bookingHeaderText}>
+    <SafeAreaView
+      style={[
+        styles.bookingHeader,
+        {
+          backgroundColor: colors.secondary,
+        },
+      ]}
+    >
+      <Text
+        category="h6"
+        style={[
+          styles.bookingHeaderText,
+          {
+            color: colors.textPrimary,
+          },
+        ]}
+      >
         {props?.options?.headerTitle as string}
       </Text>
       <TouchableOpacity style={styles.bookingHeaderButton} onPress={goToAddEditBookingScreen}>
@@ -52,6 +81,7 @@ function BookingHistoryStackScreen() {
           headerTitle: 'Booking History',
           headerShown: true,
           header: renderHomeHeader,
+          ...options,
         }}
       />
       <HomeStack.Screen
@@ -61,6 +91,7 @@ function BookingHistoryStackScreen() {
           headerTitle: 'Create/Edit New Booking',
           headerShown: true,
           headerBackTitle: 'Back',
+          ...options,
           // header: renderEditBookingHeader,
         }}
       />

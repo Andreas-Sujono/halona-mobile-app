@@ -9,13 +9,13 @@ export const COLORS = {
 };
 
 export const DARK_COLORS = {
-  PRIMARY: '#222222',
+  PRIMARY: '#383939',
   SECONDARY: '#3F4E4F',
   TERTIARY: '#DCD7C9',
   TEXT_PRIMARY: 'white',
   TEXT_SECONDARY: 'grey',
   TEXT_TERTIARY: 'grey',
-  TEXT_CTA: '#046dbe',
+  TEXT_CTA: 'white',
 };
 
 export type ColorType =
