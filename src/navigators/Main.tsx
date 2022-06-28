@@ -5,7 +5,7 @@ import { LoginScreen, SignUpScreen } from 'screens/Login';
 import { useSelector } from 'react-redux';
 import { selectIsAuthenticated } from 'Store/Selector/auth';
 import BottomTabsNavigator, { BottomTabsParamList } from './BottomTabs';
-import { navigate, navigationRef } from './utils';
+import { navigateAndSimpleReset, navigationRef } from './utils';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -20,7 +20,7 @@ function MainStackScreen() {
   useEffect(() => {
     if (isAuthenticated) {
       //navigate to dashboard directly
-      navigate('BottomTabs');
+      navigateAndSimpleReset('BottomTabs');
     }
   }, [isAuthenticated]);
 

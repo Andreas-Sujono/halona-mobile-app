@@ -1,5 +1,5 @@
 import React, { memo, useContext } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import { CheckAppUpdateContext } from 'Context/useCheckAppUpdate';
 // import { useMyAccountData } from 'hooks/api/auth/useUserData';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -16,6 +16,7 @@ import {
 import View from 'components/Native/View';
 import { Page, Text } from 'components/Native';
 import { unencryptedSetData } from 'Services/Storage';
+import * as UpdateAPK from 'rn-update-apk';
 
 const languageData = [
   {
@@ -144,10 +145,18 @@ function SettingScreen() {
         <View style={{ display: 'flex', flexDirection: 'row' }}>
           <Icon name="upload" size={16} color="#0d43ee" style={styles.icon} />
           <Text style={styles.pageLink}>{t('settings.check_updates')}</Text>
+          {appUpdateContext.isDownloading ? (
+            <View style={{ display: 'flex', flexDirection: 'row', marginLeft: 20 }}>
+              <ActivityIndicator />
+              <Text>{`${appUpdateContext.downloadProgress.toString()}%`}</Text>
+            </View>
+          ) : (
+            <></>
+          )}
         </View>
       </TouchableOpacity>
       <Text style={styles.pageSectionContainer}>
-        {t('settings.installed_version_code', { version: '0.0.1' })}
+        {t('settings.installed_version_code', { version: UpdateAPK.getInstalledVersionName() })}
       </Text>
     </Page>
   );
