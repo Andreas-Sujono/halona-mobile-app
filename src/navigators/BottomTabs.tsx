@@ -7,6 +7,7 @@ import FinanceStackScreen from './Finance';
 import BookingHistoryStackScreen from './BookingHistory';
 import { useAppSelector } from 'Store';
 import { selectColors, selectTheme } from 'Store/Selector/auth/theme';
+import { Platform } from 'react-native';
 
 export type BottomTabsParamList = {
   FinanceStack: undefined;
@@ -42,8 +43,8 @@ const BottomTabsNavigator = () => {
 
   const options: any = {
     tabBarStyle: {
-      paddingBottom: 6,
-      paddingTop: 4,
+      paddingBottom: Platform.OS === 'android' ? 6 : 24,
+      paddingTop: Platform.OS === 'android' ? 4 : undefined,
       backgroundColor: colors.secondary,
     },
     tabBarIconStyle: {

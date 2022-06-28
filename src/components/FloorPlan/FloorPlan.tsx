@@ -1,13 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { memo, useContext, useState } from 'react';
-import { Layout, Text, Divider, Button } from '@ui-kitten/components';
+import { Layout, Divider, Button } from '@ui-kitten/components';
 import {
   Image,
   StyleSheet,
-  View,
-  Text as NativeText,
   ActivityIndicator,
   TouchableOpacity,
+  Text as RNText,
 } from 'react-native';
 import { RoomDetailDrawerContext } from 'Context/useRoomDetailBottomDrawerContext';
 import { navigate } from 'navigators/utils';
@@ -16,6 +15,8 @@ import { Room, RoomStatus } from 'model';
 import RoomCard from 'components/RoomCard';
 import { useAppSelector } from 'Store';
 import { selectUseFloorPlanView } from 'Store/Selector/booking';
+import View from 'components/Native/View';
+import Text from 'components/Native/Text';
 
 export const mapStatusToInfo = {
   [RoomStatus.NOT_AVAILABLE]: {
@@ -91,7 +92,7 @@ function FloorPlan() {
                     ]}
                     onPress={() => onClickRoom(room)}
                   >
-                    <Text>{room.name}</Text>
+                    <RNText>{room.name}</RNText>
                   </TouchableOpacity>
                 ))
               }
@@ -132,7 +133,7 @@ function FloorPlan() {
                   ]}
                   onPress={() => onClickRoom(room)}
                 >
-                  <Text>{room.name}</Text>
+                  <RNText>{room.name}</RNText>
                 </TouchableOpacity>
               ))
             }
@@ -167,7 +168,7 @@ function FloorPlan() {
   };
 
   return (
-    <Layout style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.buttonContainer}>
         {allRooms?.map((item: any) => (
           <TouchableOpacity
@@ -181,7 +182,7 @@ function FloorPlan() {
             ]}
             onPress={() => setCurrentFloorId(item.floor)}
           >
-            <NativeText
+            <Text
               style={[
                 styles.buttonText,
                 {
@@ -190,7 +191,7 @@ function FloorPlan() {
               ]}
             >
               {item.floorName}
-            </NativeText>
+            </Text>
           </TouchableOpacity>
         ))}
         <Button
@@ -207,7 +208,7 @@ function FloorPlan() {
         </Button>
       </View>
       {useFloorPlanView ? renderFloorPlan() : renderRoomSummaryList()}
-    </Layout>
+    </View>
   );
 }
 
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 32,
     marginRight: 6,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     border: 0,
     borderColor: 'white',
     display: 'flex',

@@ -10,9 +10,10 @@ function Text({
   fontSize = 16,
   maxFontSize,
   minFontSize,
+  category,
   ...props
 }: {
-  children?: React.ReactElement | React.ReactElement[] | string;
+  children?: React.ReactElement | React.ReactElement[] | string | any;
   color?: ColorType;
   fontSize?: number;
   maxFontSize?: number;

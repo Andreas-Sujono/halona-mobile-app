@@ -98,4 +98,8 @@ booking history
 MYAPP_UPLOAD_STORE_PASSWORD
 MYAPP_UPLOAD_KEY_PASSWORD
 
-- 
+- IOS
+    - disable react native config, to enable build react native vector-icon
+    - remove ios/build
+    - run cd ios && pod install
+    - `yarn add react-native-vector-icons && rm -rf ./ios/build && cd ./ios && pod install && cd .. && npx react-native run-ios`

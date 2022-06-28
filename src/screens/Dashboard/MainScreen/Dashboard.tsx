@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { Datepicker, Layout, Text, Toggle } from '@ui-kitten/components';
-import { SafeAreaView, StyleSheet, ScrollView, RefreshControl, View } from 'react-native';
+import { Datepicker, Layout, Toggle } from '@ui-kitten/components';
+import { SafeAreaView, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import SummaryCard from './SummaryCard';
 // import Notifications from './Notifications';
 import FloorPlan from 'components/FloorPlan';
@@ -14,6 +14,7 @@ import { setMainBookingDateView, setUseFloorPlanView } from 'Store/Actions/booki
 import PendingRoomSection from './PendingRoomSection';
 import { useTranslation } from 'react-i18next';
 import { selectUser } from 'Store/Selector/auth';
+import { Page, Text, View } from 'components/Native';
 
 // hi, [avail rooom] [notif], room booking (+ create, update), booking summary
 // finance: add cost, see income, statistic
@@ -57,21 +58,23 @@ function HomeScreen() {
 
   return (
     <>
-      <ScrollView
+      <Page
         style={styles.Container}
         onTouchStart={onClickHomeDashboard}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        enableScroll
+        bgColor="secondary"
       >
         <SafeAreaView style={styles.Container}>
-          <Layout style={styles.topContainer}>
-            <Text category="h6" style={styles.welcomeTitleText}>
+          <View style={styles.topContainer} bgColor="secondary">
+            <Text category="h6" style={styles.welcomeTitleText} fontSize={20} color="textSecondary">
               {t('dashboard.welcome', { name: me?.fullName })}
             </Text>
-            <Text category="h3" style={styles.subtitleText}>
+            <Text category="h3" style={styles.subtitleText} fontSize={28}>
               {t('dashboard.manage_booking')}
             </Text>
 
-            <View style={styles.mainForm}>
+            <View style={styles.mainForm} bgColor="secondary">
               <Datepicker
                 label="See booking date"
                 date={new Date(mainBookingDateView)}
@@ -82,16 +85,16 @@ function HomeScreen() {
                 checked={useFloorPlanView}
                 onChange={onSelectFloorPlanView}
               >
-                Use floor plan view
+                <Text fontSize={14}>Use floor plan view</Text>
               </Toggle>
             </View>
-          </Layout>
+          </View>
           <SummaryCard />
           <FloorPlan />
           <PendingRoomSection />
           {/* <Notifications /> */}
         </SafeAreaView>
-      </ScrollView>
+      </Page>
       <RoomDetailDrawerRender />
     </>
   );
@@ -115,11 +118,9 @@ const RoomDetailDrawerRender = () => {
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    background: 'white',
   },
   topContainer: {
     padding: 24,
-    backgroundColor: 'white',
     margin: 0,
   },
   welcomeTitleText: {
