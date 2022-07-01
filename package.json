@@ -8,7 +8,9 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "deploy-android": "cd android && ./gradlew assembleRelease --warning-mode all --stacktrace --info"
+    "bundle": "react-native bundle --dev false --platform android --entry-file index.js --bundle-output ./android/app/src/main/assets/index.android.bundle --assets-dest ./android/app/src/main/res",
+    "deploy-android-release": "cd android && ./gradlew assembleRelease --warning-mode all --stacktrace --info",
+    "deploy-android-debug": "cd android && ./gradlew assembleDebug --warning-mode all --stacktrace --info"
   },
   "dependencies": {
     "@eva-design/eva": "^2.1.1",

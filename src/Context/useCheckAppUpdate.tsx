@@ -53,7 +53,7 @@ export const CheckAppUpdateProvider = memo(({ children }: any) => {
       // By default other modules like rn-fetch-blob define one (conveniently named the same as below)
       // but if you don't match the names you will get an odd-looking XML exception:
       // "Attempt to invoke virtual method 'android.content.res.XmlResourceParser ....' on a null object reference"
-      fileProviderAuthority: 'com.halona',
+      fileProviderAuthority: 'com.halona.provider',
 
       // This callback is called if there is a new version but it is not a forceUpdate.
       needUpdateApp: (performUpdate: any) => {
@@ -82,6 +82,7 @@ export const CheckAppUpdateProvider = memo(({ children }: any) => {
 
       // Called if the current version appears to be the most recent available
       notNeedUpdateApp: () => {
+        Alert.alert('App is already up to date');
         console.log('notNeedUpdateApp callback called');
       },
 

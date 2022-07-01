@@ -158,7 +158,6 @@ function SettingScreen() {
       <Text style={styles.pageSectionContainer}>
         {t('settings.installed_version_code', { version: UpdateAPK.getInstalledVersionName() })}
       </Text>
-      <Text style={styles.pageSectionContainer}>test new version</Text>
     </Page>
   );
 }
