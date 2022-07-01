@@ -17,6 +17,7 @@ import { useAppSelector } from 'Store';
 import { selectUseFloorPlanView } from 'Store/Selector/booking';
 import View from 'components/Native/View';
 import Text from 'components/Native/Text';
+import { COLORS } from 'utils/colors';
 
 export const mapStatusToInfo = {
   [RoomStatus.NOT_AVAILABLE]: {
@@ -92,7 +93,7 @@ function FloorPlan() {
                     ]}
                     onPress={() => onClickRoom(room)}
                   >
-                    <RNText>{room.name}</RNText>
+                    <Text style={{ color: COLORS.TEXT_PRIMARY }}>{room.name}</Text>
                   </TouchableOpacity>
                 ))
               }
@@ -133,7 +134,7 @@ function FloorPlan() {
                   ]}
                   onPress={() => onClickRoom(room)}
                 >
-                  <RNText>{room.name}</RNText>
+                  <Text style={{ color: COLORS.TEXT_PRIMARY }}>{room.name}</Text>
                 </TouchableOpacity>
               ))
             }

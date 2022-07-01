@@ -36,11 +36,11 @@ function Text({
     <UIText
       {...props}
       style={[
-        ...injectedStyle,
         {
           color: selectedColor,
           fontSize: finalFontSize,
         },
+        ...injectedStyle,
       ]}
     >
       {children}

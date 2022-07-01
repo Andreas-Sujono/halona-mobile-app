@@ -102,6 +102,7 @@ export const CheckAppUpdateProvider = memo(({ children }: any) => {
         setValue({
           ...value,
           downloadProgress: progress,
+          isDownloading: true,
         });
       },
 

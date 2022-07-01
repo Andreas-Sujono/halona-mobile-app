@@ -2,7 +2,7 @@ export const COLORS = {
   PRIMARY: 'white',
   SECONDARY: '#fafafa',
   TERTIARY: '#fafafa',
-  TEXT_PRIMARY: '#000000',
+  TEXT_PRIMARY: 'black',
   TEXT_SECONDARY: 'grey',
   TEXT_TERTIARY: 'lightgrey',
   TEXT_CTA: '#046dbe',

@@ -28,7 +28,7 @@ function FinanceMain() {
   const renderFooter = () => (
     <View style={styles.footerText}>
       {/* {isLoading && <ActivityIndicator />} */}
-      <Text>No more booking at the moment</Text>
+      <Text>No more records at the moment</Text>
     </View>
   );
 
