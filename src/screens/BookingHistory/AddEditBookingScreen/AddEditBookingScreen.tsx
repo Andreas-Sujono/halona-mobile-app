@@ -20,6 +20,7 @@ import { formatCurrency } from 'utils';
 import { navigate } from 'navigators/utils';
 import { PopUp } from 'components/PopUp';
 import BookingSummary from './BookingSummary';
+import ImagePicker from 'components/ImagePicker';
 
 const bookingStatusData = [
   {
@@ -323,6 +324,14 @@ function AddEditBookingScreen({ route }: any) {
         placeholder="Place your Text"
         onChangeText={(value: any) => updateBookingdata('guestNRIC', value)}
         style={styles.input}
+      />
+      <ImagePicker
+        text="Choose from gallery"
+        text2="Take a photo"
+        uploadedText="Image is uploaded"
+        style={{
+          marginBottom: 12,
+        }}
       />
       <Input
         value={bookingData.description}
