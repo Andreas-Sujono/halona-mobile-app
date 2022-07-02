@@ -114,6 +114,9 @@ function AddFinanceRecordScreen({ route }: any) {
     }
     if (isEditMode) {
       updateRecord(recordData);
+      navigate('BottomTabs', {
+        screen: 'FinanceStack',
+      });
       return;
     }
     createRecord(recordData);
@@ -127,7 +130,12 @@ function AddFinanceRecordScreen({ route }: any) {
       title: 'Are you sure you want to delete this record?',
       type: 'confirm',
       textBody: 'You cannot undo this action!',
-      callback: () => deleteRecord({}),
+      callback: () => {
+        deleteRecord({});
+        navigate('BottomTabs', {
+          screen: 'FinanceStack',
+        });
+      },
     });
     return;
   };

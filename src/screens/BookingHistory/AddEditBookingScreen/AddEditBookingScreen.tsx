@@ -192,6 +192,12 @@ function AddEditBookingScreen({ route }: any) {
     }
     queryClient.invalidateQueries(QUERY_KEY.PENDING_ROOM_BOOKINGS);
     updateBooking(bookingData);
+    navigate('BottomTabs', {
+      screen: 'BookingHistoryStack',
+      params: {
+        screen: 'BookingHistoryHome',
+      },
+    });
     return;
   };
 
@@ -205,7 +211,15 @@ function AddEditBookingScreen({ route }: any) {
       title: 'Are you sure you want to delete this booking?',
       type: 'confirm',
       textBody: 'You cannot undo this action!',
-      callback: () => deleteBooking({}),
+      callback: async () => {
+        deleteBooking({});
+        navigate('BottomTabs', {
+          screen: 'BookingHistoryStack',
+          params: {
+            screen: 'BookingHistoryHome',
+          },
+        });
+      },
     });
     return;
   };
